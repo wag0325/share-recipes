@@ -64,11 +64,15 @@
           index {{$index}}
           post {{post._id}}
         </div>
-
-        <div ng-hide="isLoggedIn()">
-          <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
+    </script>
+    <script type="text/ng-template" id="/post-create.html">
+      <div class="page-header">
+          <h1>Create Post</h1>
         </div>
-        <form ng-submit="addPost()"
+      <div ng-hide="isLoggedIn()">
+        <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
+      </div>
+      <form ng-submit="addPost()"
           ng-show="isLoggedIn()"
           style="margin-top:30px;">
           <h3>Add a new post</h3>
@@ -88,7 +92,6 @@
           <button type="submit" class="btn btn-primary">Post</button>
         </form>
     </script>
-
     <script type="text/ng-template" id="/posts.html">
       <div class="page-header">
         <h3>

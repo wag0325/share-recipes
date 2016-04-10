@@ -16,6 +16,12 @@ function($stateProvider, $urlRouterProvider) {
 	    }]
 	  }
     })
+    .state('postsCreate', {
+    	url: '/create',
+    	templateUrl: '/post-create.html',
+    	controller: 'CreatePostsCtrl',
+
+    })
     .state('posts', {
 	  url: '/posts/{id}',
 	  templateUrl: '/posts.html',
@@ -25,27 +31,27 @@ function($stateProvider, $urlRouterProvider) {
 	      return posts.get($stateParams.id);
 	    }]
 	  }
-		})
-	  .state('login', {
-		  url: '/login',
-		  templateUrl: '/login.html',
-		  controller: 'AuthCtrl',
-		  onEnter: ['$state', 'auth', function($state, auth){
-		    if(auth.isLoggedIn()){
-		      $state.go('home');
-		    }
-		  }]
-		})
-		.state('register', {
-		  url: '/register',
-		  templateUrl: '/register.html',
-		  controller: 'AuthCtrl',
-		  onEnter: ['$state', 'auth', function($state, auth){
-		    if(auth.isLoggedIn()){
-		      $state.go('home');
-		    }
-		  }]
-		});
+	})
+  .state('login', {
+	  url: '/login',
+	  templateUrl: '/login.html',
+	  controller: 'AuthCtrl',
+	  onEnter: ['$state', 'auth', function($state, auth){
+	    if(auth.isLoggedIn()){
+	      $state.go('home');
+	    }
+	  }]
+	})
+	.state('register', {
+	  url: '/register',
+	  templateUrl: '/register.html',
+	  controller: 'AuthCtrl',
+	  onEnter: ['$state', 'auth', function($state, auth){
+	    if(auth.isLoggedIn()){
+	      $state.go('home');
+	    }
+	  }]
+	});
   $urlRouterProvider.otherwise('home');
 }]);
 
@@ -88,6 +94,39 @@ function($scope, posts, auth){
 
 	$scope.incrementUpvotes = function(post) {
 	  posts.upvote(post);
+	};
+}]);
+
+app.controller('CreatePostsCtrl', [
+'$scope',
+'posts',
+'auth',
+'$state',
+function($scope, posts, auth, $state){
+	$scope.isLoggedIn = auth.isLoggedIn;
+	console.log("CreatePostsCtrl");
+	// $scope.addPost = function(){
+	$scope.addPost = function(){
+		// var postNumber = $scope.posts.length;
+		// console.log(postNumber);
+		if(!$scope.title || $scope.title === '') { return; }
+		//added author to posts.create
+		posts.create({
+	    title: $scope.title,
+	    link: $scope.link
+	  }).error(function(error){
+      $scope.error = error;
+    }).then(function(){
+      $state.go('home');
+    });
+	  // posts.addComment(posts._id, {
+	  //   body: $scope.body,
+	  //   author: 'user'
+	  // }).success(function(comment){
+	  // 	$scope.post.comments.push(comment);
+	  // });
+		$scope.title = '';
+		$scope.link = '';
 	};
 }]);
 
