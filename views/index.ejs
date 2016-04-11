@@ -29,12 +29,9 @@
         <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
       </ul>
     </nav>
-    <div class="row">
+    <div class="container-fluid">
       <div class="col-md-6 col-md-offset-3">
         <ui-view></ui-view>
-
-
-
       </div>
     </div>
 
@@ -62,7 +59,8 @@
             <a href="#/posts/{{post._id}}">Comments</a>
           </span>
           index {{$index}}
-          post {{post._id}}
+          post {{post._id}}<br/>
+          <img src="{{post.img_url}}" style="height:300px;" ng-show="post.img_url"/>
         </div>
     </script>
     <script type="text/ng-template" id="/post-create.html">
@@ -89,6 +87,21 @@
             placeholder="Link"
             ng-model="link"></input>
           </div>
+          <div class="form-group">
+            <input type="text"
+            class="form-control"
+            placeholder="Image URL"
+            ng-model="img_url"></input>
+          </div>
+          <div class="form-group">
+            <input type="text"
+            class="form-control"
+            placeholder="Category"
+            ng-model="category"></input>
+          </div>
+          <div class="form-group">
+            <textarea cols="40" rows="10" ng-model="body" class="form-control"></textarea>
+          </div>
           <button type="submit" class="btn btn-primary">Post</button>
         </form>
     </script>
@@ -103,7 +116,8 @@
           </span>
         </h3>
       </div>
-
+      <div>By {{post.author}} at {{post.created_at | date: 'shortDate'}}</div>
+      <div>{{post.body}}</div>
       <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
         <span class="glyphicon glyphicon-thumbs-up"
           ng-click="incrementUpvotes(comment)"></span>

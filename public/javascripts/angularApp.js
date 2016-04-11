@@ -113,7 +113,10 @@ function($scope, posts, auth, $state){
 		//added author to posts.create
 		posts.create({
 	    title: $scope.title,
-	    link: $scope.link
+	    link: $scope.link,
+	    img_url: $scope.img_url,
+	    body: $scope.body,
+	    category: $scope.category
 	  }).error(function(error){
       $scope.error = error;
     }).then(function(){
