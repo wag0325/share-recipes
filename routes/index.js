@@ -107,6 +107,17 @@ router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, nex
   });
 });
 
+// POST category
+router.post('/categories', auth, function(req, res, next){
+  var category = new Category(req.body);
+  category.author = req.payload.username;
+
+  category.save(function(err, category){
+    if(err){ return next(err); }
+
+    res.json(category);
+  });
+});
 // POST register
 router.post('/register', function(req, res, next){
   if(!req.body.username || !req.body.password){

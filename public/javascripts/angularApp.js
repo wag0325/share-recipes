@@ -32,6 +32,11 @@ function($stateProvider, $urlRouterProvider) {
 	    }]
 	  }
 	})
+  .state('categories', {
+	  url: '/createcategory',
+	  templateUrl: '/category-create.html',
+	  controller: 'CreateCategoriesCtrl'
+	})
   .state('login', {
 	  url: '/login',
 	  templateUrl: '/login.html',
@@ -191,6 +196,30 @@ function($scope, auth){
   $scope.logOut = auth.logOut;
 }]);
 
+app.controller('CreateCategoriesCtrl', [
+'$scope',
+'auth',
+'categories',
+function($scope, auth, categories) {
+	$scope.isLoggedIn = auth.isLoggedIn;
+	$scope.addCategory = function(){
+		// var postNumber = $scope.posts.length;
+		// console.log(postNumber);
+		if(!$scope.title || $scope.title === '') { return; }
+		//added author to posts.create
+		categories.create({
+	    title: $scope.title,
+	  })
+	  // posts.addComment(posts._id, {
+	  //   body: $scope.body,
+	  //   author: 'user'
+	  // }).success(function(comment){
+	  // 	$scope.post.comments.push(comment);
+	  // });
+		$scope.title = '';
+	};
+}]);
+
 app.factory('posts', [
 '$http', 
 'auth',
@@ -235,6 +264,19 @@ function($http, auth){
 	  });
 	};
   return o;
+}]);
+
+app.factory('categories', [
+'$http', 
+'auth',
+function($http, auth){
+	var cat = {};
+	cat.create = function(category){
+		return $http.post('/categories', category, {
+	    headers: {Authorization: 'Bearer '+auth.getToken()}
+  	});
+	};
+	return cat;
 }]);
 
 app.factory('auth', ['$http', '$window', function($http, $window){
