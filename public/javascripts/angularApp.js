@@ -141,7 +141,7 @@ function($scope, posts, auth, $state, categories){
 		if(!$scope.title || $scope.title === '') { return; }
 		//added author to posts.create
 		// $scope.category = categories.get($scope.category);
-		posts.create($scope.category, {
+		posts.create({
 	    title: $scope.title,
 	    link: $scope.link,
 	    img_url: $scope.img_url,
@@ -152,12 +152,9 @@ function($scope, posts, auth, $state, categories){
     }).then(function(){
       $state.go('home');
     });
-	  // posts.addComment(posts._id, {
-	  //   body: $scope.body,
-	  //   author: 'user'
-	  // }).success(function(comment){
-	  // 	$scope.post.comments.push(comment);
-	  // });
+    // Remove posts 
+    // Update existing posts
+    // Find a list of a posts
 		$scope.title = '';
 		$scope.link = '';
 	};

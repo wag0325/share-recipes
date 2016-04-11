@@ -16,32 +16,27 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.get('/posts', function(req, res, next) {
-  Post.find(function(err, posts){
-    if(err){ return next(err); }
+router.route('/posts')
+  .get(function(req, res, next) {
+    Post.find(function(err, posts){
+      if(err){ return next(err); }
 
-    res.json(posts);
-  });
-});
-
-router.post('/posts', auth, function(req, res, next) {
-  var post = new Post(req.body);
-  post.category = req.category;
-  post.author = req.payload.username;
-
-  post.save(function(err, post){
-    if(err){ return next(err); }
-
-    req.category.posts.push(post);
-    req.category.save(function(err, category) {
-      if(err) { return next(err); }
-
-      res.json(category);
+      res.json(posts);
     });
+  })
+  .post(auth, function(req, res, next) {
+    var post = new Post(req.body);
+    post.category = req.category;
+    post.author = req.payload.username;
 
-    // res.json(post);
+    post.save(function(err, post){
+      if(err){ return next(err); }
+
+      res.json(post);
+    });
   });
-});
+
+// GET post list by filters
 
 // Load :post faster
 router.param('post', function(req, res, next, id) {
@@ -56,14 +51,16 @@ router.param('post', function(req, res, next, id) {
   });
 });
 
-// GET individual post
-router.get('/posts/:post', function(req, res, next) {
-  req.post.populate('comments', function(err, post) {
-    if (err) { return next(err); }
-    res.json(req.post);
+router.route('/posts/:post')
+  .get(function(req, res, next) {
+    req.post.populate('comments', function(err, post) {
+      if (err) { return next(err); }
+      res.json(req.post);
+    });
   });
-});
-
+  
+// PUT individual post
+// DELETE individual post
 // PUT upvote individual post
 router.put('/posts/:post/upvote', auth, function(req, res, next) {
   // Call the upvote method defined in post schema
@@ -104,7 +101,7 @@ router.param('comment', function(req, res, next, id) {
     return next();
   });
 });
-
+// DELETE individual comment
 // PUT upvote individual comment
 router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, next) {
   // Call the upvote method defined in post schema
