@@ -20,7 +20,11 @@ function($stateProvider, $urlRouterProvider) {
     	url: '/create',
     	templateUrl: '/post-create.html',
     	controller: 'CreatePostsCtrl',
-
+    	resolve: {
+		    categoryPromise: ['categories', function(categories){
+		      return categories.getAll();
+		    }]
+	  	}
     })
     .state('posts', {
 	  url: '/posts/{id}',
@@ -112,10 +116,12 @@ app.controller('CreatePostsCtrl', [
 'posts',
 'auth',
 '$state',
-function($scope, posts, auth, $state){
+'categories',
+function($scope, posts, auth, $state, categories){
 	$scope.isLoggedIn = auth.isLoggedIn;
 	console.log("CreatePostsCtrl");
-	// $scope.addPost = function(){
+	$scope.categories = categories.categories;
+	
 	$scope.addPost = function(){
 		// var postNumber = $scope.posts.length;
 		// console.log(postNumber);
