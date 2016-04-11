@@ -26,12 +26,20 @@ router.get('/posts', function(req, res, next) {
 
 router.post('/posts', auth, function(req, res, next) {
   var post = new Post(req.body);
+  post.category = req.category;
   post.author = req.payload.username;
 
   post.save(function(err, post){
     if(err){ return next(err); }
 
-    res.json(post);
+    req.category.posts.push(post);
+    req.category.save(function(err, category) {
+      if(err) { return next(err); }
+
+      res.json(category);
+    });
+
+    // res.json(post);
   });
 });
 
@@ -127,6 +135,35 @@ router.post('/categories', auth, function(req, res, next){
     res.json(category);
   });
 });
+
+// Load :post faster
+router.param('category', function(req, res, next, id) {
+  var query = Category.findById(id);
+  query.exec(function (err, category){
+    if (err) { return next(err); }
+    if (!category) { return next(new Error('can\'t find category')); }
+
+    req.category = category;
+    return next();
+  });
+});
+
+// GET individual category
+router.get('/categories/:category', function(req, res, next) {
+  return res.json(req.category);
+  // res.send('GET request to the homepage');
+  // Category.find(function(err, categories){
+  //   if(err){ return next(err); }
+
+  //   res.json(categories);
+  // });  
+  // res.json("category");
+  // req.category.populate('posts', function(err, category) {
+  //   if (err) { return next(err); }
+  //   res.json(req.category);
+  // });
+});
+
 // POST register
 router.post('/register', function(req, res, next){
   if(!req.body.username || !req.body.password){

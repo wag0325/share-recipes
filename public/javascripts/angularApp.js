@@ -32,11 +32,12 @@ function($stateProvider, $urlRouterProvider) {
 	  controller: 'PostsCtrl',
 	  resolve: {
 	    post: ['$stateParams', 'posts', function($stateParams, posts) {
+	    	console.log($stateParams.id);
 	      return posts.get($stateParams.id);
 	    }]
 	  }
 	})
-  .state('categories', {
+  .state('categoriesCreate', {
 	  url: '/createcategory',
 	  templateUrl: '/category-create.html',
 	  controller: 'CreateCategoriesCtrl',
@@ -45,6 +46,18 @@ function($stateProvider, $urlRouterProvider) {
 	      return categories.getAll();
 	    }]
   	}
+	})
+	.state('categories', {
+		url: '/categories/{id}',
+		templateUrl: '/categories.html',
+		controller: 'CategoriesCtrl',
+		resolve: {
+			category: ['$stateParams', 'categories', function($stateParams, categories){
+				// return categories.getAll();
+				return categories.get($stateParams.id);
+				// return "category";
+			}]
+		}
 	})
   .state('login', {
 	  url: '/login',
@@ -127,7 +140,8 @@ function($scope, posts, auth, $state, categories){
 		// console.log(postNumber);
 		if(!$scope.title || $scope.title === '') { return; }
 		//added author to posts.create
-		posts.create({
+		// $scope.category = categories.get($scope.category);
+		posts.create($scope.category, {
 	    title: $scope.title,
 	    link: $scope.link,
 	    img_url: $scope.img_url,
@@ -222,6 +236,7 @@ function($scope, auth, categories) {
 		//added author to posts.create
 		categories.create({
 	    title: $scope.title,
+	    desc: $scope.desc
 	  })
 	  // posts.addComment(posts._id, {
 	  //   body: $scope.body,
@@ -231,6 +246,15 @@ function($scope, auth, categories) {
 	  // });
 		$scope.title = '';
 	};
+}]);
+
+app.controller('CategoriesCtrl', [
+'$scope',
+'categories',
+'category',
+function($scope, categories, category){
+	$scope.category = category;
+	console.log("category", $scope.category);
 }]);
 
 app.factory('posts', [
@@ -291,6 +315,11 @@ function($http, auth){
       angular.copy(data, cat.categories);
     });
   };
+  cat.get = function(id) {
+	  return $http.get('/categories/' + id).then(function(res){
+	    return res.data;
+	  });
+	};
 	cat.create = function(category){
 		return $http.post('/categories', category, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
