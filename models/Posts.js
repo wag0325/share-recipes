@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var PostSchema = new mongoose.Schema({
   title: String,
-  category: String,
+  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
   link: String,
   img_url: String,
   body: String,

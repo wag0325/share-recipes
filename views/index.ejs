@@ -125,6 +125,10 @@
           </div>
           <button type="submit" class="btn btn-primary">Post</button>
         </form>
+        <h2>Category list:</h2>
+        <div ng-repeat="cat in categories">
+          {{cat.title}}
+        </div>
     </script>
     <script type="text/ng-template" id="/posts.html">
       <div class="page-header">

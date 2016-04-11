@@ -11,10 +11,10 @@ function($stateProvider, $urlRouterProvider) {
       templateUrl: '/home.html',
       controller: 'MainCtrl',
       resolve: {
-	    postPromise: ['posts', function(posts){
-	      return posts.getAll();
-	    }]
-	  }
+		    postPromise: ['posts', function(posts){
+		      return posts.getAll();
+		    }]
+	  	}
     })
     .state('postsCreate', {
     	url: '/create',
@@ -35,7 +35,12 @@ function($stateProvider, $urlRouterProvider) {
   .state('categories', {
 	  url: '/createcategory',
 	  templateUrl: '/category-create.html',
-	  controller: 'CreateCategoriesCtrl'
+	  controller: 'CreateCategoriesCtrl',
+	  resolve: {
+	    categoryPromise: ['categories', function(categories){
+	      return categories.getAll();
+	    }]
+  	}
 	})
   .state('login', {
 	  url: '/login',
@@ -202,6 +207,8 @@ app.controller('CreateCategoriesCtrl', [
 'categories',
 function($scope, auth, categories) {
 	$scope.isLoggedIn = auth.isLoggedIn;
+	$scope.categories = categories.categories;
+
 	$scope.addCategory = function(){
 		// var postNumber = $scope.posts.length;
 		// console.log(postNumber);
@@ -270,7 +277,14 @@ app.factory('categories', [
 '$http', 
 'auth',
 function($http, auth){
-	var cat = {};
+	var cat = {
+		categories: []
+	};
+	cat.getAll = function() {
+    return $http.get('/categories').success(function(data){
+      angular.copy(data, cat.categories);
+    });
+  };
 	cat.create = function(category){
 		return $http.post('/categories', category, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}

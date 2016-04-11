@@ -107,7 +107,16 @@ router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, nex
   });
 });
 
-// POST category
+// GET categories
+router.get('/categories', function(req, res, next) {
+  Category.find(function(err, categories){
+    if(err){ return next(err); }
+
+    res.json(categories);
+  });
+});
+
+// POST categories
 router.post('/categories', auth, function(req, res, next){
   var category = new Category(req.body);
   category.author = req.payload.username;
