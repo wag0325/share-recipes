@@ -118,7 +118,12 @@ function($scope, posts, auth){
 		$scope.title = '';
 		$scope.link = '';
 	};
+	$scope.editPost = function() {
 
+	};
+	$scope.deletePost = function() {
+
+	};
 	$scope.incrementUpvotes = function(post) {
 	  posts.upvote(post);
 	};
@@ -277,6 +282,12 @@ function($http, auth){
   	}).success(function(data){
 	    o.posts.push(data);
 	  });
+	};
+	o.update = function(id){
+		
+	};
+	o.delete = function(id){
+
 	};
 	o.upvote = function(post) {
 	  return $http.put('/posts/' + post._id + '/upvote', null, {

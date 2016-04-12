@@ -57,6 +57,16 @@ router.route('/posts/:post')
       if (err) { return next(err); }
       res.json(req.post);
     });
+  })
+  .put(function(req, res, next) {
+    if(err){ return next(err); }
+    return res.json(req.post);
+  })
+  .delete(function(req, res, next){
+    req.post.remove(function(err, post){
+      if (err) { return next(err); }
+      return res.send("Successfully removed the post!");
+    });
   });
   
 // PUT individual post
