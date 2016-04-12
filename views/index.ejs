@@ -64,7 +64,7 @@
           <btn class="btn btn-primary" ng-click="editPost(post._id)">Edit</btn>
           <btn class="btn btn-primary" ng-click="deletePost(post._id)">Delete</btn>
           <br/>
-          <img src="{{post.img_url}}" style="height:300px;" ng-show="post.img_url"/>
+          <img src="{{post.img_url}}" style="height:100px;" ng-show="post.img_url"/>
         </div>
     </script>
     <script type="text/ng-template" id="/post-create.html">
@@ -99,7 +99,7 @@
           </div>
           <div class="form-group">
             <select name="catSelect" id="catSelect" ng-model="category">
-              <option ng-repeat="cat in categories" value="{{cat}}">{{cat.title}}</option>
+              <option ng-repeat="cat in categories" value="{{cat._id}}">{{cat.title}}</option>
             </select>
           </div>
           <div class="form-group">

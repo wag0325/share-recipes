@@ -26,7 +26,7 @@ router.route('/posts')
   })
   .post(auth, function(req, res, next) {
     var post = new Post(req.body);
-    post.category = req.category;
+    // post.category = req.category;
     post.author = req.payload.username;
 
     post.save(function(err, post){

@@ -123,7 +123,6 @@ function($scope, posts, auth, $state, categories){
 		// console.log(postNumber);
 		if(!$scope.title || $scope.title === '') { return; }
 		//added author to posts.create
-		// $scope.category = categories.get($scope.category);
 		posts.create({
 	    title: $scope.title,
 	    link: $scope.link,
