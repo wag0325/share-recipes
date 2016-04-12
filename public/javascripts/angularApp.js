@@ -87,43 +87,21 @@ app.controller('MainCtrl', [
 '$scope', 'posts', 'auth', 
 function($scope, posts, auth){
 	$scope.isLoggedIn = auth.isLoggedIn;
-
- //  $scope.posts = [
- //  {title: 'post 1', upvotes: 5},
- //  {title: 'post 2', upvotes: 2},
- //  {title: 'post 3', upvotes: 15},
- //  {title: 'post 4', upvotes: 9},
- //  {title: 'post 5', upvotes: 4}
-	// ];
-
 	$scope.posts = posts.posts;
-
-	$scope.addPost = function(){
-
-		// var postNumber = $scope.posts.length;
-		// console.log(postNumber);
-		if(!$scope.title || $scope.title === '') { return; }
-		//added author to posts.create
-		posts.create({
-	    title: $scope.title,
-	    link: $scope.link
-	  });
-
-	  // posts.addComment(posts._id, {
-	  //   body: $scope.body,
-	  //   author: 'user'
-	  // }).success(function(comment){
-	  // 	$scope.post.comments.push(comment);
-	  // });
-		$scope.title = '';
-		$scope.link = '';
+	$scope.alert = function() {
+		console.log("alert");
 	};
-	$scope.editPost = function() {
-
+	$scope.editPost = function(id) {
+		console.log("editPost", id);
 	};
-	$scope.deletePost = function() {
-
-	};
+	$scope.deletePost = function(id) {
+		console.log("deletePost", id);
+		posts.delete(id).error(function(error){
+      $scope.error = error;
+    }).then(function(){
+      posts.getAll();
+    });
+	}
 	$scope.incrementUpvotes = function(post) {
 	  posts.upvote(post);
 	};
@@ -284,10 +262,10 @@ function($http, auth){
 	  });
 	};
 	o.update = function(id){
-		
+		return $http.put('/posts/' + id);
 	};
 	o.delete = function(id){
-
+		return $http.delete('/posts/' + id);
 	};
 	o.upvote = function(post) {
 	  return $http.put('/posts/' + post._id + '/upvote', null, {

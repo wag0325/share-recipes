@@ -57,12 +57,12 @@
             </span>
           </span>
           <span>
-            <a href="#/posts/{{post._id}}">Comments</a>
+            <a href="#/posts/{{post._id}}">{{post.comments.length}} Comments</a>
           </span>
           index {{$index}}
           post {{post._id}}
-          <a class="btn btn-default" ng-click-"editPost()">Edit</a>
-          <a class="btn btn-default" ng-click-"deletePost()">Delete</a>
+          <btn class="btn btn-primary" ng-click="editPost(post._id)">Edit</btn>
+          <btn class="btn btn-primary" ng-click="deletePost(post._id)">Delete</btn>
           <br/>
           <img src="{{post.img_url}}" style="height:300px;" ng-show="post.img_url"/>
         </div>
@@ -144,8 +144,8 @@
     </div>
     </script>
     <script type="text/ng-template" id="/posts.html">
-      <a class="btn btn-default" ng-click-"editPost()">Edit</a>
-      <a class="btn btn-default" ng-click-"deletePost()">Delete</a>
+      <a class="btn btn-default" ng-click-"editPost({{post._id}})">Edit</a>
+      <a class="btn btn-default" ng-click-"deletePost({{post._id}})">Delete</a>
       <div class="page-header">
         <h3>
           <a ng-show="post.link" href="{{post.link}}">
