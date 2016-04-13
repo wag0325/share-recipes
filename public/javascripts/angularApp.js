@@ -186,8 +186,7 @@ function($scope, posts, auth, $state, categories){
 	  }).error(function(error){
       $scope.error = error;
     }).then(function(){
-    	// should goto the post
-      $state.go('home');
+      $state.go('posts', {id: $scope.post._id});
     });
 	};
 	$scope.reset = function() {
@@ -240,8 +239,7 @@ function($scope, posts, post, auth, $state, categories){
 	  }).error(function(error){
       $scope.error = error;
     }).then(function(){
-    	// should goto the post
-      $state.go('home');
+      $state.go('posts', {id: $scope.post._id});
     });
 	};
 	$scope.reset = function() {
