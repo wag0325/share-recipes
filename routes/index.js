@@ -61,8 +61,10 @@ router.route('/posts/:post')
     });
   })
   .put(function(req, res, next) {
-    if(err){ return next(err); }
-    return res.json(req.post);
+    req.post.update(req.post, function(err, post){
+      if (err) { return next(err); }
+      return res.send("Successfully updated the post!");
+    });
   })
   .delete(function(req, res, next){
     req.post.remove(function(err, post){
@@ -159,18 +161,11 @@ router.param('category', function(req, res, next, id) {
 
 // GET individual category
 router.get('/categories/:category', function(req, res, next) {
-  return res.json(req.category);
-  // res.send('GET request to the homepage');
-  // Category.find(function(err, categories){
-  //   if(err){ return next(err); }
-
-  //   res.json(categories);
-  // });  
-  // res.json("category");
-  // req.category.populate('posts', function(err, category) {
-  //   if (err) { return next(err); }
-  //   res.json(req.category);
-  // });
+  Post.find({category: req.category}, function(err, posts){
+    if(err){ return next(err); }
+    console.log(posts);
+    res.json(posts);
+  });
 });
 
 // POST register

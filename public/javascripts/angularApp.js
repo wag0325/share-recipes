@@ -36,6 +36,20 @@ function($stateProvider, $urlRouterProvider) {
 	      return posts.get($stateParams.id);
 	    }]
 	  }
+		})
+    .state('postsedit', {
+	  url: '/posts/{id}/edit',
+	  templateUrl: '/post-create.html',
+	  controller: 'UpdatePostsCtrl',
+	  resolve: {
+	    post: ['$stateParams', 'posts', function($stateParams, posts) {
+	    	console.log($stateParams.id);
+	      return posts.get($stateParams.id);
+	    }],
+	    categoryPromise: ['categories', function(categories){
+		      return categories.getAll();
+		  }]
+	  }
 	})
   .state('categoriesCreate', {
 	  url: '/createcategory',
@@ -117,22 +131,36 @@ function($scope, posts, auth, $state, categories){
 	$scope.isLoggedIn = auth.isLoggedIn;
 	console.log("CreatePostsCtrl");
 	$scope.categories = categories.categories;
+	var postDefault = {};
+	$scope.pgh = "Create Post";
+	$scope.submit = "Post";
+	$scope.post = postDefault;
+
+	if (post) {
+		$scope.pgh = "Update Post";
+		$scope.submit = "Update";
+		$scope.update = true; 
+		$scope.post = post;
+	} else {
+		$scope.post = postDefault;
+	}
 
 	$scope.addPost = function(){
 		// var postNumber = $scope.posts.length;
-		// console.log(postNumber);
+		console.log("add");
 		if(!$scope.title || $scope.title === '') { return; }
 		//added author to posts.create
 		posts.create({
-	    title: $scope.title,
-	    link: $scope.link,
-	    img_url: $scope.img_url,
-	    body: $scope.body,
-	    category: $scope.category,
-	    tags: $scope.tags
+	    title: $scope.post.title,
+	    link: $scope.post.link,
+	    img_url: $scope.post.img_url,
+	    body: $scope.post.body,
+	    category: $scope.post.category,
+	    tags: $scope.post.tags
 	  }).error(function(error){
       $scope.error = error;
     }).then(function(){
+    	// should goto the post
       $state.go('home');
     });
     // Remove posts 
@@ -142,18 +170,81 @@ function($scope, posts, auth, $state, categories){
 		$scope.link = '';
 	};
 	$scope.updatePost = function() {
-		posts.create({
-	    title: $scope.title,
-	    link: $scope.link,
-	    img_url: $scope.img_url,
-	    body: $scope.body,
-	    category: $scope.category
+		console.log("update");
+		posts.update(post._id, {
+	    title: $scope.post.title,
+	    link: $scope.post.link,
+	    img_url: $scope.post.img_url,
+	    body: $scope.post.body,
+	    category: $scope.post.category,
+	    tags: $scope.post.tags
 	  }).error(function(error){
       $scope.error = error;
     }).then(function(){
+    	// should goto the post
       $state.go('home');
     });
 	};
+	$scope.reset = function() {
+		$scope.post = postDefault;
+	};
+	$scope.back = function() {
+		$state.go('home');
+	}
+}]);
+
+
+// To combine create and update posts ctrl, 
+//I need to call post.get() inside the controller
+app.controller('UpdatePostsCtrl', [
+'$scope',
+'posts',
+'post',
+'auth',
+'$state',
+'categories',
+function($scope, posts, post, auth, $state, categories){
+	$scope.isLoggedIn = auth.isLoggedIn;
+	$scope.categories = categories.categories;
+	var postDefault = {};
+	$scope.pgh = "Create Post";
+	$scope.submit = "Post";
+	$scope.post = postDefault;
+
+	if (post) {
+		$scope.pgh = "Update Post";
+		$scope.submit = "Update";
+		$scope.update = true; 
+		$scope.post = post;
+	} else {
+		$scope.post = postDefault;
+	}
+
+	$scope.addPost = function() {
+		console.log("update");
+		console.log($scope.post._id);
+		console.log(post._id);
+		posts.update($scope.post._id, {
+			_id: $scope.post._id,
+	    title: $scope.post.title,
+	    link: $scope.post.link,
+	    img_url: $scope.post.img_url,
+	    body: $scope.post.body,
+	    category: $scope.post.category,
+	    tags: $scope.post.tags
+	  }).error(function(error){
+      $scope.error = error;
+    }).then(function(){
+    	// should goto the post
+      $state.go('home');
+    });
+	};
+	$scope.reset = function() {
+		$scope.post = postDefault;
+	};
+	$scope.back = function() {
+		$state.go('home');
+	}
 }]);
 
 app.controller('PostsCtrl', [
@@ -285,8 +376,8 @@ function($http, auth){
 	    o.posts.push(data);
 	  });
 	};
-	o.update = function(id){
-		return $http.put('/posts/' + id);
+	o.update = function(id, post){
+		return $http.put('/posts/' + id, post);
 	};
 	o.delete = function(id){
 		return $http.delete('/posts/' + id);
