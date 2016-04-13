@@ -7,6 +7,7 @@ var PostSchema = new mongoose.Schema({
   img_url: String,
   body: String,
   author: String,
+  tags: [String],
   upvotes: {type: Number, default: 0},
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
 }, { timestamps: { createdAt: 'created_at' } });

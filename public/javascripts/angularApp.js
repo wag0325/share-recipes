@@ -117,7 +117,7 @@ function($scope, posts, auth, $state, categories){
 	$scope.isLoggedIn = auth.isLoggedIn;
 	console.log("CreatePostsCtrl");
 	$scope.categories = categories.categories;
-	
+
 	$scope.addPost = function(){
 		// var postNumber = $scope.posts.length;
 		// console.log(postNumber);
@@ -128,7 +128,8 @@ function($scope, posts, auth, $state, categories){
 	    link: $scope.link,
 	    img_url: $scope.img_url,
 	    body: $scope.body,
-	    category: $scope.category
+	    category: $scope.category,
+	    tags: $scope.tags
 	  }).error(function(error){
       $scope.error = error;
     }).then(function(){
@@ -140,6 +141,19 @@ function($scope, posts, auth, $state, categories){
 		$scope.title = '';
 		$scope.link = '';
 	};
+	$scope.updatePost = function() {
+		posts.create({
+	    title: $scope.title,
+	    link: $scope.link,
+	    img_url: $scope.img_url,
+	    body: $scope.body,
+	    category: $scope.category
+	  }).error(function(error){
+      $scope.error = error;
+    }).then(function(){
+      $state.go('home');
+    });
+	};
 }]);
 
 app.controller('PostsCtrl', [
@@ -147,7 +161,8 @@ app.controller('PostsCtrl', [
 'posts',
 'post',
 'auth',
-function($scope, posts, post, auth){
+'$state',
+function($scope, posts, post, auth, $state){
 	$scope.isLoggedIn = auth.isLoggedIn;
 	$scope.post = post;
 
@@ -161,7 +176,17 @@ function($scope, posts, post, auth){
 	  });
 	  $scope.body = '';
 	};
-
+	$scope.editPost = function(id) {
+		console.log("editPost", id);
+	};
+	$scope.deletePost = function(id) {
+		console.log("deletePost", id);
+		posts.delete(id).error(function(error){
+      $scope.error = error;
+    }).then(function(){
+      $state.go('login');
+    });
+	};
 	$scope.incrementUpvotes = function(comment) {
 	  posts.upvoteComment(post, comment);
 	};

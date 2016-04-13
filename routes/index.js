@@ -25,7 +25,9 @@ router.route('/posts')
     });
   })
   .post(auth, function(req, res, next) {
+    req.body.tags = req.body.tags.replace(/\s/g, '').split(",");
     var post = new Post(req.body);
+    // post.tags = post.tags.replace(/\s/''/g).split(",");
     // post.category = req.category;
     post.author = req.payload.username;
 
