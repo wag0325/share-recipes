@@ -70,6 +70,11 @@ function($stateProvider, $urlRouterProvider) {
 				// return categories.getAll();
 				return categories.get($stateParams.id);
 				// return "category";
+			}],
+			postsByCat: ['$stateParams', 'categories', function($stateParams, categories){
+				// return categories.getAll();
+				return categories.getPosts($stateParams.id);
+				// return "category";
 			}]
 		}
 	})
@@ -347,9 +352,14 @@ app.controller('CategoriesCtrl', [
 '$scope',
 'categories',
 'category',
-function($scope, categories, category){
+'postsByCat',
+function($scope, categories, category, postsByCat){
+	// console.log(posts);
+	// $scope.posts = posts;
 	$scope.category = category;
-	console.log("category", $scope.category);
+	// console.log("category", $scope.category);
+	$scope.posts = postsByCat;
+	console.log($scope.posts);
 }]);
 
 app.factory('posts', [
@@ -425,6 +435,11 @@ function($http, auth){
 		return $http.post('/categories', category, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
   	});
+	};
+	cat.getPosts = function(id) {
+		return $http.get('/categories/' + id + '/posts').then(function(res){
+	    return res.data;
+	  });
 	};
 	return cat;
 }]);

@@ -161,13 +161,16 @@ router.param('category', function(req, res, next, id) {
 
 // GET individual category
 router.get('/categories/:category', function(req, res, next) {
+  res.json(req.category);
+});
+// GET posts under category
+router.get('/categories/:category/posts', function(req, res, next) {
   Post.find({category: req.category}, function(err, posts){
     if(err){ return next(err); }
     console.log(posts);
     res.json(posts);
   });
 });
-
 // POST register
 router.post('/register', function(req, res, next){
   if(!req.body.username || !req.body.password){

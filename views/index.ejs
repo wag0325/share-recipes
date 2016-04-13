@@ -150,6 +150,31 @@
       <h1>Category: {{category.title}}</h1>
       <p>{{category.desc}}</p>
     </div>
+    <div ng-repeat="post in posts | orderBy:'-upvotes'">
+          <span class="glyphicon glyphicon-thumbs-up"
+            ng-click="incrementUpvotes(post)"></span>
+          {{post.upvotes}}
+          <span style="font-size:20px; margin-left:10px;">
+            <a ng-show="post.link" href="{{post.link}}">
+              {{post.title}}
+            </a>
+            <span ng-hide="post.link">
+              {{post.title}}
+            </span>
+            <span ng-show="post.author">
+              posted by <a>{{post.author}}</a> |
+            </span>
+          </span>
+          <span>
+            <a href="#/posts/{{post._id}}">{{post.comments.length}} Comments</a>
+          </span>
+          index {{$index}}
+          post {{post._id}}
+          <btn class="btn btn-primary" ng-click="editPost(post._id)">Edit</btn>
+          <btn class="btn btn-primary" ng-click="deletePost(post._id)">Delete</btn>
+          <br/>
+          <img src="{{post.img_url}}" style="height:100px;" ng-show="post.img_url"/>
+        </div>
     </script>
     <script type="text/ng-template" id="/posts.html">
       <btn class="btn btn-primary" ng-click="editPost(post._id)">Edit</btn>
