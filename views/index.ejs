@@ -46,12 +46,9 @@
             ng-click="incrementUpvotes(post)"></span>
           {{post.upvotes}}
           <span style="font-size:20px; margin-left:10px;">
-            <a ng-show="post.link" href="{{post.link}}">
+            <a href="#/posts/{{post._id}}">
               {{post.title}}
             </a>
-            <span ng-hide="post.link">
-              {{post.title}}
-            </span>
             <span ng-show="post.author">
               posted by <a>{{post.author}}</a> |
             </span>
@@ -61,6 +58,9 @@
           </span>
           index {{$index}}
           post {{post._id}}
+          <btn class="btn btn-primary" ng-show="post.link" href="{{post.link}}">
+            Link
+          </btn>
           <btn class="btn btn-primary" ng-click="editPost(post._id)">Edit</btn>
           <btn class="btn btn-primary" ng-click="deletePost(post._id)">Delete</btn>
           <br/>
