@@ -61,10 +61,23 @@ router.route('/posts/:post')
     });
   })
   .put(function(req, res, next) {
-    req.post.update(req.post, function(err, post){
+    // post.update({_id: req.post._id}, post, function(err, post){
+    //   if (err) { return next(err); }
+    //   console.log(post);
+    //   res.json(post);
+    // });
+    req.post.remove(function(err, post){
       if (err) { return next(err); }
-      return res.send("Successfully updated the post!");
+      return res.send("Successfully removed the post!");
     });
+    req.body.tags = req.body.tags.replace(/\s/g, '').split(",");
+    req.post = new Post(req.body);
+    console.log(req.post);
+    req.post.save(function(err, post){
+        if(err){ return next(err); }
+
+        // res.json(post);
+      });
   })
   .delete(function(req, res, next){
     req.post.remove(function(err, post){
