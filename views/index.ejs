@@ -61,8 +61,8 @@
           <btn class="btn btn-primary" ng-show="post.link" href="{{post.link}}">
             Link
           </btn>
-          <btn class="btn btn-primary" ng-click="editPost(post._id)">Edit</btn>
-          <btn class="btn btn-primary" ng-click="deletePost(post._id)">Delete</btn>
+          <btn class="btn btn-primary" ng-click="editPost(post._id)" ng-show="post.author==$scope.currentUser">Edit</btn>
+          <btn class="btn btn-primary" ng-click="deletePost(post._id)" ng-show="post.author==$scope.currentUser">Delete</btn>
           <br/>
           <img src="{{post.img_url}}" style="height:100px;" ng-show="post.img_url"/>
         </div>
@@ -177,8 +177,8 @@
         </div>
     </script>
     <script type="text/ng-template" id="/posts.html">
-      <btn class="btn btn-primary" ng-click="editPost(post._id)">Edit</btn>
-      <btn class="btn btn-primary" ng-click="deletePost(post._id)">Delete</btn>
+      <btn class="btn btn-primary" ng-click="editPost(post._id)" ng-show="$scope.post.author==$scope.currentUser">Edit</btn>
+      <btn class="btn btn-primary" ng-click="deletePost(post._id)" ng-show="$scope.post.author==$scope.currentUser">Delete</btn>
       <div class="page-header">
         <h3>
           <a ng-show="post.link" href="{{post.link}}">

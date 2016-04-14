@@ -25,7 +25,9 @@ router.route('/posts')
     });
   })
   .post(auth, function(req, res, next) {
-    req.body.tags = req.body.tags.replace(/\s/g, '').split(",");
+    if (req.body.tags) {
+      req.body.tags = req.body.tags.replace(/\s/g, '').split(",");
+    }
     var post = new Post(req.body);
     // post.tags = post.tags.replace(/\s/''/g).split(",");
     // post.category = req.category;
@@ -70,7 +72,9 @@ router.route('/posts/:post')
       if (err) { return next(err); }
       return res.send("Successfully removed the post!");
     });
-    req.body.tags = req.body.tags.replace(/\s/g, '').split(",");
+    if (req.body.tags) {
+      req.body.tags = req.body.tags.replace(/\s/g, '').split(",");
+    }
     req.post = new Post(req.body);
     console.log(req.post);
     req.post.save(function(err, post){

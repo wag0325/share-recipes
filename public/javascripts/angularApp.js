@@ -106,6 +106,7 @@ app.controller('MainCtrl', [
 '$scope', 'posts', 'auth', '$state',
 function($scope, posts, auth, $state){
 	$scope.isLoggedIn = auth.isLoggedIn;
+	$scope.currentUser = auth.currentUser;
 	$scope.posts = posts.posts;
 	$scope.alert = function() {
 		console.log("alert");
@@ -140,21 +141,11 @@ function($scope, posts, auth, $state, categories){
 	var postDefault = {};
 	$scope.pgh = "Create Post";
 	$scope.submit = "Post";
-	$scope.post = postDefault;
-
-	if (post) {
-		$scope.pgh = "Update Post";
-		$scope.submit = "Update";
-		$scope.update = true; 
-		$scope.post = post;
-	} else {
-		$scope.post = postDefault;
-	}
 
 	$scope.addPost = function(){
 		// var postNumber = $scope.posts.length;
-		console.log("add");
-		if(!$scope.title || $scope.title === '') { return; }
+		// console.log("add");
+		if(!$scope.post.title || $scope.post.title === '') { return; }
 		//added author to posts.create
 		posts.create({
 	    title: $scope.post.title,
@@ -167,28 +158,13 @@ function($scope, posts, auth, $state, categories){
       $scope.error = error;
     }).then(function(){
     	// should goto the post
-      $state.go('home');
+    	$state.go('home');
     });
     // Remove posts 
     // Update existing posts
     // Find a list of a posts
 		$scope.title = '';
 		$scope.link = '';
-	};
-	$scope.updatePost = function() {
-		console.log("update");
-		posts.update(post._id, {
-	    title: $scope.post.title,
-	    link: $scope.post.link,
-	    img_url: $scope.post.img_url,
-	    body: $scope.post.body,
-	    category: $scope.post.category,
-	    tags: $scope.post.tags
-	  }).error(function(error){
-      $scope.error = error;
-    }).then(function(){
-      $state.go('posts', {id: $scope.post._id});
-    });
 	};
 	$scope.reset = function() {
 		$scope.post = postDefault;
@@ -209,7 +185,10 @@ app.controller('UpdatePostsCtrl', [
 '$state',
 'categories',
 function($scope, posts, post, auth, $state, categories){
-	$scope.isLoggedIn = auth.isLoggedIn;
+	$scope.currentUser = auth.currentUser;
+	if (post.author == $scope.currentUser) {
+		$scope.isLoggedIn = auth.isLoggedIn;
+	}
 	$scope.categories = categories.categories;
 	var postDefault = {};
 	$scope.pgh = "Create Post";
@@ -259,8 +238,8 @@ app.controller('PostsCtrl', [
 '$state',
 function($scope, posts, post, auth, $state){
 	$scope.isLoggedIn = auth.isLoggedIn;
+	$scope.currentUser = auth.currentUser;
 	$scope.post = post;
-
 	$scope.addComment = function(){
 	  if($scope.body === '') { return; }
 	  posts.addComment(post._id, {
@@ -353,9 +332,11 @@ app.controller('CategoriesCtrl', [
 'categories',
 'category',
 'postsByCat',
-function($scope, categories, category, postsByCat){
+'auth',
+function($scope, categories, category, postsByCat, auth){
 	// console.log(posts);
 	// $scope.posts = posts;
+	$scope.isLoggedIn = auth.isLoggedIn;
 	$scope.category = category;
 	// console.log("category", $scope.category);
 	$scope.posts = postsByCat;
