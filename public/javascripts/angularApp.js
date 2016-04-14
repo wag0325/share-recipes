@@ -103,8 +103,8 @@ function($stateProvider, $urlRouterProvider) {
 
 
 app.controller('MainCtrl', [
-'$scope', 'posts', 'auth', 
-function($scope, posts, auth){
+'$scope', 'posts', 'auth', '$state',
+function($scope, posts, auth, $state){
 	$scope.isLoggedIn = auth.isLoggedIn;
 	$scope.posts = posts.posts;
 	$scope.alert = function() {
@@ -112,6 +112,7 @@ function($scope, posts, auth){
 	};
 	$scope.editPost = function(id) {
 		console.log("editPost", id);
+		$state.go('postsedit', {id: id});
 	};
 	$scope.deletePost = function(id) {
 		console.log("deletePost", id);
@@ -272,6 +273,7 @@ function($scope, posts, post, auth, $state){
 	};
 	$scope.editPost = function(id) {
 		console.log("editPost", id);
+		$state.go('postsedit', {id: id});
 	};
 	$scope.deletePost = function(id) {
 		console.log("deletePost", id);
