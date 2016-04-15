@@ -41,6 +41,14 @@
         <section id="searchbar">
           Search: <input ng-model="query">
         </section>
+        <section id="sortby">
+          Sort by:
+          <select ng-model="orderProp">
+            <option value="upvotes">Most Liked</option>
+            <option value="created_at">Newest</option>
+            <option value="comments.length">Comments</option>
+          </select>
+        </section>
       </div>
       <div class="content col-md-9">
         <div class="page-header">
