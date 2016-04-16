@@ -108,12 +108,13 @@ function($scope, posts, auth, $state){
 	$scope.isLoggedIn = auth.isLoggedIn;
 	$scope.currentUser = auth.currentUser;
 	$scope.posts = posts.posts;
+	$scope.titleLimit = 15;
 	$scope.allTags = [];
 	$scope.selectedTags = [];
 	$scope.orderOptions = [
-		{name: 'Most Liked', value: 'upvotes'},
+		{name: 'Most Liked', value: '-upvotes'},
 		{name: 'Newest', value: 'created_at'},
-		{name: 'Most Reviewed', value: 'comments.length'}];
+	];
 	// List tags from posts
 	for (var i = 0; i < $scope.posts.length; i++) {
 		for (var j = 0; j < $scope.posts[i].tags.length; j++){

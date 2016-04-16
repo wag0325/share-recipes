@@ -66,11 +66,12 @@
         <a href="/#/create" class="btn btn-primary">Create Recipes</a>
         <a href="/#/createcategory" class="btn btn-primary">Categories</a>
         <div class="row">
-          <div class="col-sm-4 col-md-3" ng-repeat="post in posts | orderBy:'-upvotes' | filter: query">
+
+          <div class="col-sm-4 col-md-3" ng-repeat="post in posts | orderBy:orderProp.value | filter: query">
             <div class="thumbnail">
               <img src="{{post.img_url}}" style="width: 100%; height:200px;"/>
               <div class="caption">
-                <h3><a href="#/posts/{{post._id}}">{{post.title}}</a></h3>
+                <h4><a href="#/posts/{{post._id}}">{{post.title | limitTo:titleLimit}}</a></h4>
                 <p>
                   <span class="glyphicon glyphicon-thumbs-up"
                     ng-click="incrementUpvotes(post)"></span>
