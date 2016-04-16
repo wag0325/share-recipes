@@ -123,10 +123,23 @@ function($scope, posts, auth, $state){
 		}
 	}
 	console.log($scope.allTags);
+	// Initial - all selected tags
+	// $scope.selectedTags = $scope.allTags;
+	// $scope.selectedTags.push('default');
+	// $scope.tagChecked = true;
 	// Selected Tags
-	$scope.addTag = function(tag) {
-		if ($scope.selectedTags.indexOf(tag) == -1) {
+	$scope.addRemoveTag = function(checked, tag){
+		console.log(checked, tag);
+		// var defaultIndex = $scope.selectedTags.indexOf('default');
+		var tagIndex = $scope.selectedTags.indexOf(tag);
+		// if(defaultIndex != -1) {
+		// 	$scope.selectedTags.splice(defaultIndex);
+		// }
+		if(checked && tagIndex == -1) {
 			$scope.selectedTags.push(tag);
+		}
+		else {
+			$scope.selectedTags.splice(tagIndex);
 		}
 		console.log($scope.selectedTags);
 	}
@@ -522,4 +535,17 @@ app.filter('noDuplicatesArr', function(){
 		// returns array w/ no duplicates and the frequencies 
 		return [array, freq];
 	}
+});
+
+app.filter('filterByTags', function() {
+  return function(posts, tags) {
+    return posts.filter(function(post) {
+      for (var i in post.tags) {
+        if (tags.indexOf(post.tags[i]) != -1) {
+          return true;
+        }
+    	}
+    	return false;
+		});
+  };
 });

@@ -52,7 +52,7 @@
           Tags:
           <div ng-repeat="tag in allTags">
             <label>
-              <input type="checkbox" ng-click="addTag(tag)" ng-model="checkedTag"> {{tag}}
+              <input type="checkbox" ng-model="tagChecked" ng-change="addRemoveTag(tagChecked, tag)"> {{tag}}
             </label>
           </div>
         </div>
