@@ -38,17 +38,26 @@
     <script type="text/ng-template" id="/home.html">
       <div class="row">
       <div class="sidebar col-md-3">
-        <section id="searchbar">
+        <div id="searchbar">
           Search: <input ng-model="query">
-        </section>
-        <section id="sortby">
+        </div>
+        <div id="sortby">
           Sort by:
-          <select ng-model="orderProp">
-            <option value="upvotes">Most Liked</option>
-            <option value="created_at">Newest</option>
-            <option value="comments.length">Comments</option>
+          <select ng-model="orderProp" ng-init="orderProp = orderOptions[0]" ng-options="option.name for option in orderOptions">
           </select>
-        </section>
+        </div>
+        <div id="categories">
+        </div>
+        <div id="Tags">
+          Tags:
+          <div ng-repeat="tag in allTags">
+            <label>
+              <input type="checkbox" ng-click="addTag(tag)" ng-model="checkedTag"> {{tag}}
+            </label>
+          </div>
+        </div>
+        <div id="Price">
+        </div>
       </div>
       <div class="content col-md-9">
         <div class="page-header">

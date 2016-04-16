@@ -108,13 +108,35 @@ function($scope, posts, auth, $state){
 	$scope.isLoggedIn = auth.isLoggedIn;
 	$scope.currentUser = auth.currentUser;
 	$scope.posts = posts.posts;
-	$scope.alert = function() {
-		console.log("alert");
-	};
-	$scope.editPost = function(id) {
-		console.log("editPost", id);
-		$state.go('postsedit', {id: id});
-	};
+	$scope.allTags = [];
+	$scope.selectedTags = [];
+	$scope.orderOptions = [
+		{name: 'Most Liked', value: 'upvotes'},
+		{name: 'Newest', value: 'created_at'},
+		{name: 'Most Reviewed', value: 'comments.length'}];
+	// List tags from posts
+	for (var i = 0; i < $scope.posts.length; i++) {
+		for (var j = 0; j < $scope.posts[i].tags.length; j++){
+			if ($scope.allTags.indexOf($scope.posts[i].tags[j]) == -1) {
+    		$scope.allTags.push($scope.posts[i].tags[j]);
+			}
+		}
+	}
+	console.log($scope.allTags);
+	// Selected Tags
+	$scope.addTag = function(tag) {
+		if ($scope.selectedTags.indexOf(tag) == -1) {
+			$scope.selectedTags.push(tag);
+		}
+		console.log($scope.selectedTags);
+	}
+
+	// noDuplicatesArr($scope.SelectedctedTags);
+	// $scope.editPost = function(id) {
+	// 	console.log("editPost", id);
+	// 	$state.go('postsedit', {id: id});
+	// };
+
 	$scope.deletePost = function(id) {
 		console.log("deletePost", id);
 		posts.delete(id).error(function(error){
@@ -481,3 +503,23 @@ app.factory('auth', ['$http', '$window', function($http, $window){
 
 	return auth;
 }]);
+
+app.filter('noDuplicatesArr', function(){
+	return function(arr) {
+		var array = [], freq = [], prev; 
+
+		arr.sort();
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i] !== prev){
+				array.push(arr[i]);
+				freq.push(1);
+			}	else {
+				b[b.length-1]++;
+			}
+
+			prev = arr[i];
+		}
+		// returns array w/ no duplicates and the frequencies 
+		return [array, freq];
+	}
+});
