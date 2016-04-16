@@ -29,10 +29,35 @@
         <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
       </ul>
     </nav>
- -->    <div class="container-fluid">
-      
-        <ui-view></ui-view>
-      
+ -->    
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="navbar navbar-default" ng-controller="NavCtrl">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ui-sref="home">ShareRecipes</a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+              <li ng-show="isLoggedIn()"><a>Hi, {{ currentUser() }}</a></li>
+              <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+              <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
+              <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
+    </div>
+    <ui-view></ui-view>  
     </div>
 
     <script type="text/ng-template" id="/home.html">
@@ -46,8 +71,7 @@
           <select ng-model="orderProp" ng-init="orderProp = orderOptions[0]" ng-options="option.name for option in orderOptions">
           </select>
         </div>
-        <div id="categories">
-        </div>
+       
         <div id="Tags">
           Tags:
           <div ng-repeat="tag in allTags">
@@ -66,13 +90,13 @@
         <a href="/#/create" class="btn btn-primary">Create Recipes</a>
         <a href="/#/createcategory" class="btn btn-primary">Categories</a>
         <div class="row">
-
           <div class="col-sm-4 col-md-3" ng-repeat="post in posts | orderBy:orderProp.value | filter: query">
             <div class="thumbnail">
               <img src="{{post.img_url}}" style="width: 100%; height:200px;"/>
               <div class="caption">
                 <h4><a href="#/posts/{{post._id}}">{{post.title | limitTo:titleLimit}}</a></h4>
                 <p>
+                {{post.category}}
                   <span class="glyphicon glyphicon-thumbs-up"
                     ng-click="incrementUpvotes(post)"></span>
                     {{post.upvotes}} Likes | 
