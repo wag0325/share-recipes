@@ -33,7 +33,7 @@ function($stateProvider, $urlRouterProvider) {
     })
     .state('postsCreate', {
     	url: '/create',
-    	templateUrl: '/post.create.html',
+    	templateUrl: 'views/post.create.html',
     	controller: 'CreatePostsCtrl',
     	resolve: {
 		    categoryPromise: ['categories', function(categories){
@@ -43,7 +43,7 @@ function($stateProvider, $urlRouterProvider) {
     })
     .state('posts', {
 	  url: '/posts/{id}',
-	  templateUrl: '/posts.html',
+	  templateUrl: 'views/posts.html',
 	  controller: 'PostsCtrl',
 	  resolve: {
 	    post: ['$stateParams', 'posts', function($stateParams, posts) {
@@ -54,7 +54,7 @@ function($stateProvider, $urlRouterProvider) {
 		})
     .state('postsedit', {
 	  url: '/posts/{id}/edit',
-	  templateUrl: '/post.create.html',
+	  templateUrl: 'views/post.create.html',
 	  controller: 'UpdatePostsCtrl',
 	  resolve: {
 	    post: ['$stateParams', 'posts', function($stateParams, posts) {
@@ -68,7 +68,7 @@ function($stateProvider, $urlRouterProvider) {
 	})
   .state('categoriesCreate', {
 	  url: '/createcategory',
-	  templateUrl: '/category.create.html',
+	  templateUrl: 'views/category.create.html',
 	  controller: 'CreateCategoriesCtrl',
 	  resolve: {
 	    categoryPromise: ['categories', function(categories){
@@ -78,7 +78,7 @@ function($stateProvider, $urlRouterProvider) {
 	})
 	.state('categories', {
 		url: '/categories/{id}',
-		templateUrl: '/categories.html',
+		templateUrl: 'views/categories.html',
 		controller: 'CategoriesCtrl',
 		resolve: {
 			category: ['$stateParams', 'categories', function($stateParams, categories){
@@ -95,7 +95,7 @@ function($stateProvider, $urlRouterProvider) {
 	})
   .state('login', {
 	  url: '/login',
-	  templateUrl: '/login.html',
+	  templateUrl: 'views/login.html',
 	  controller: 'AuthCtrl',
 	  onEnter: ['$state', 'auth', function($state, auth){
 	    if(auth.isLoggedIn()){
@@ -105,7 +105,7 @@ function($stateProvider, $urlRouterProvider) {
 	})
 	.state('register', {
 	  url: '/register',
-	  templateUrl: '/register.html',
+	  templateUrl: 'views/register.html',
 	  controller: 'AuthCtrl',
 	  onEnter: ['$state', 'auth', function($state, auth){
 	    if(auth.isLoggedIn()){
