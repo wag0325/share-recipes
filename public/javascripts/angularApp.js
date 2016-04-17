@@ -20,7 +20,7 @@ function($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('home', {
       url: '/home',
-      templateUrl: '/home.html',
+      templateUrl: 'views/home.html',
       controller: 'HomeCtrl',
       resolve: {
 		    postPromise: ['posts', function(posts){

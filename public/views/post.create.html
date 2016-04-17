@@ -1,0 +1,47 @@
+<div class="page-header">
+  <h1>{{pgh}}</h1>
+</div>
+<div ng-hide="isLoggedIn()">
+<h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
+</div>
+<form ng-submit="addPost()"
+  ng-show="isLoggedIn()"
+  style="margin-top:30px;">
+  <h3>Add a new post</h3>
+
+  <div class="form-group">
+    <input type="text"
+      class="form-control"
+      placeholder="Title"
+      ng-model="post.title"></input>
+  </div>
+  <div class="form-group">
+    <input type="text"
+    class="form-control"
+    placeholder="Link"
+    ng-model="post.link"></input>
+  </div>
+  <div class="form-group">
+    <input type="text"
+    class="form-control"
+    placeholder="Image URL"
+    ng-model="post.img_url"></input>
+  </div>
+  <div class="form-group">
+    <select name="catSelect" id="catSelect" ng-model="post.category">
+      <option ng-repeat="cat in categories" value="{{cat._id}}">{{cat.title}}</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <textarea cols="40" rows="10" ng-model="post.body" class="form-control"></textarea>
+  </div>
+  <div class="form-group">
+    <input type="text"
+    class="form-control"
+    placeholder="Tags"
+    ng-model="post.tags"></input>
+  </div>
+  <button type="submit" class="btn btn-primary">{{submit}}</button>
+  <button class="btn btn-primary" ng-click="back()">Cancel</button>
+  <button class="btn btn-primary" ng-click="reset()">Clear</button>
+</form>
