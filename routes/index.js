@@ -40,8 +40,6 @@ router.route('/posts')
     });
   });
 
-// GET post list by filters
-
 // Load :post faster
 router.param('post', function(req, res, next, id) {
   var query = Post.findById(id);
@@ -55,7 +53,7 @@ router.param('post', function(req, res, next, id) {
   });
 });
 
-router.route('/posts/:post')
+router.route('/posts/:post/:slug')
   .get(function(req, res, next) {
     req.post.populate('comments', function(err, post) {
       if (err) { return next(err); }
@@ -89,7 +87,8 @@ router.route('/posts/:post')
       return res.send("Successfully removed the post!");
     });
   });
-  
+
+
 // PUT individual post
 // DELETE individual post
 // PUT upvote individual post
@@ -180,6 +179,14 @@ router.param('category', function(req, res, next, id) {
 router.get('/categories/:category', function(req, res, next) {
   res.json(req.category);
 });
+
+router.delete('/categories/:category', function(req, res, next){
+  req.category.remove(function(err, category){
+    if (err) { return next(err); }
+    return res.send("Successfully removed the category!");
+  });
+});
+
 // GET posts under category
 router.get('/categories/:category/posts', function(req, res, next) {
   Post.find({category: req.category}, function(err, posts){

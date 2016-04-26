@@ -18,6 +18,7 @@ PostSchema.methods.upvote = function(cb) {
   this.save(cb);
 };
 
+// Slugify post title 
 function slugify(text) {
 
   return text.toString().toLowerCase()

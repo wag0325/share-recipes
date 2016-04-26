@@ -12,8 +12,8 @@ function($http, auth){
       angular.copy(data, o.posts);
     });
   };
-  o.get = function(id) {
-	  return $http.get('/posts/' + id).then(function(res){
+  o.get = function(id, slug) {
+	  return $http.get('/posts/' + id + '/' + slug).then(function(res){
 	    return res.data;
 	  });
 	};
@@ -25,10 +25,10 @@ function($http, auth){
 	  });
 	};
 	o.update = function(id, post){
-		return $http.put('/posts/' + id, post);
+		return $http.put('/posts/' + id + '/' + slug, post);
 	};
 	o.delete = function(id){
-		return $http.delete('/posts/' + id);
+		return $http.delete('/posts/' + id + '/' + slug);
 	};
 	o.upvote = function(post) {
 	  return $http.put('/posts/' + post._id + '/upvote', null, {
@@ -62,13 +62,13 @@ function($http, auth){
 	cat.getAll = function() {
     return $http.get('/categories').success(function(data){
       angular.copy(data, cat.categories);
-    });
-  };
-  cat.get = function(id) {
-	  return $http.get('/categories/' + id).then(function(res){
-	    return res.data;
-	  });
-	};
+    	});
+	  };
+	  cat.get = function(id) {
+	  	return $http.get('/categories/' + id).then(function(res){
+	    	return res.data;
+	  	});
+		};
 	cat.create = function(category){
 		return $http.post('/categories', category, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
@@ -79,6 +79,9 @@ function($http, auth){
 	    return res.data;
 	  });
 	};
+	cat.delete = function(id) {
+		return $http.delete('/categories/' + id);
+	}
 	return cat;
 }]);
 

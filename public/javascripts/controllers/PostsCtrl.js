@@ -26,7 +26,7 @@ function($scope, posts, post, auth, $state){
 	};
 	$scope.deletePost = function(id) {
 		console.log("deletePost", id);
-		posts.delete(id).error(function(error){
+		posts.delete(id, $scope.post.slug).error(function(error){
       $scope.error = error;
     }).then(function(){
       $state.go('login');

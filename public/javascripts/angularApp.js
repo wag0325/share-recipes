@@ -42,23 +42,22 @@ function($stateProvider, $urlRouterProvider) {
 	  	}
     })
     .state('posts', {
-	  url: '/posts/{id}',
-	  templateUrl: 'views/posts.html',
+	  url: '/posts/:id/:slug',
+	  templateUrl: 'views/post.html',
 	  controller: 'PostsCtrl',
 	  resolve: {
 	    post: ['$stateParams', 'posts', function($stateParams, posts) {
-	    	console.log($stateParams.id);
-	      return posts.get($stateParams.id);
+	      return posts.get($stateParams.id, $stateParams.slug);
 	    }]
 	  }
 		})
     .state('postsedit', {
-	  url: '/posts/{id}/edit',
+	  url: '/posts/:id/:slug/edit',
 	  templateUrl: 'views/post.create.html',
 	  controller: 'UpdatePostsCtrl',
 	  resolve: {
 	    post: ['$stateParams', 'posts', function($stateParams, posts) {
-	    	console.log($stateParams.id);
+	    	console.log($stateParams.id, $stateParams.slug);
 	      return posts.get($stateParams.id);
 	    }],
 	    categoryPromise: ['categories', function(categories){
