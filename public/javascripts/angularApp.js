@@ -92,6 +92,23 @@ function($stateProvider, $urlRouterProvider) {
 			}]
 		}
 	})
+	.state('categoriesBySlug', {
+		url: '/categories/:slug',
+		templateUrl: 'views/categories.html',
+		controller: 'CategoriesCtrl',
+		resolve: {
+			category: ['$stateParams', 'categories', function($stateParams, categories){
+				// return categories.getAll();
+				return categories.getBySlug($stateParams.slug);
+				// return "category";
+			}],
+			postsByCat: ['$stateParams', 'categories', function($stateParams, categories){
+				// return categories.getAll();
+				return categories.getPostsBySlug($stateParams.slug);
+				// return "category";
+			}]
+		}
+	})
   .state('login', {
 	  url: '/login',
 	  templateUrl: 'views/login.html',

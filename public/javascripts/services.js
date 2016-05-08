@@ -69,6 +69,11 @@ function($http, auth){
 	    	return res.data;
 	  	});
 		};
+	cat.getBySlug = function(slug) {
+	  	return $http.get('/categories/' + slug).then(function(res){
+	    	return res.data;
+	  	});
+		};
 	cat.create = function(category){
 		return $http.post('/categories', category, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
@@ -79,6 +84,11 @@ function($http, auth){
 	    return res.data;
 	  });
 	};
+	cat.getPostsBySlug = function(slug) {
+		return $http.get('/categories/' + slug + '/posts').then(function(res){
+		    return res.data;
+		});
+	}
 	cat.delete = function(id) {
 		return $http.delete('/categories/' + id);
 	}
