@@ -150,7 +150,14 @@ router.get('/categories', function(req, res, next) {
     res.json(categories);
   });
 });
-
+// GET category by slug 
+router.get('/categories/:slug', function(req, res, next){
+  console.log(req.params.slug);
+  Category.findOne( {slug: req.params.slug}, function(err, category) {
+    if(err){ return next(err);}
+    res.json(category);
+  });
+})
 // POST categories
 router.post('/categories', auth, function(req, res, next){
   var category = new Category(req.body);

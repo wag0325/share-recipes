@@ -15,6 +15,7 @@ function($scope, auth, categories) {
 		//added author to posts.create
 		categories.create({
 	    title: $scope.title,
+	    slug: $scope.slug,
 	    desc: $scope.desc
 	  })
 	  // posts.addComment(posts._id, {
