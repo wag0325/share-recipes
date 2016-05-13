@@ -18,11 +18,14 @@ router.get('/', function(req, res, next) {
 
 router.route('/posts')
   .get(function(req, res, next) {
+    var limit = 20;
+    var query = req.query;
+    limit = parseInt(query['limit']);
+
     Post.find(function(err, posts){
       if(err){ return next(err); }
-
       res.json(posts);
-    });
+    }).sort({_id:-1}).limit(limit);
   })
   .post(auth, function(req, res, next) {
     if (req.body.tags) {

@@ -5,8 +5,12 @@ app.controller('HomeCtrl', [
 function($scope, posts, auth, $state, categories){
 	$scope.isLoggedIn = auth.isLoggedIn;
 	$scope.currentUser = auth.currentUser;
-	$scope.posts = posts.posts;
+
+	// $scope.posts = posts.posts;
 	$scope.categories = categories.categories;
+	$scope.limit = 20;
+	$scope.filters = {};
+
 	$scope.catChecked = true;
 	$scope.titleLimit = 15;
 	$scope.allCats = [];
@@ -16,14 +20,27 @@ function($scope, posts, auth, $state, categories){
 		{name: 'Most Liked', value: '-upvotes'},
 		{name: 'Newest', value: 'created_at'},
 	];
-	// Tags from posts
-	for (var i = 0; i < $scope.posts.length; i++) {
-		for (var j = 0; j < $scope.posts[i].tags.length; j++){
-			if ($scope.allTags.indexOf($scope.posts[i].tags[j]) == -1) {
-    		$scope.allTags.push($scope.posts[i].tags[j]);
+
+	// Retreive posts
+	var getPosts = function(){
+		console.log("GetPosts");
+		posts.getAll({
+			"limit": $scope.limit
+		}).then(function(data){
+			console.log(data);
+			$scope.posts = data.data;
+			// Tags from posts
+			for (var i = 0; i < $scope.posts.length; i++) {
+				for (var j = 0; j < $scope.posts[i].tags.length; j++){
+					if ($scope.allTags.indexOf($scope.posts[i].tags[j]) == -1) {
+		    		$scope.allTags.push($scope.posts[i].tags[j]);
+					}
+				}
 			}
-		}
-	}
+		});
+	};
+	getPosts();
+
 	// Categories in an array
 	for (var i =0; i <$scope.categories.length; i++){
 		if ($scope.allCats.indexOf($scope.categories[i].title == -1)) {
@@ -81,4 +98,7 @@ function($scope, posts, auth, $state, categories){
 	$scope.incrementUpvotes = function(post) {
 	  posts.upvote(post);
 	};
+
+	// Execute functions when scope is loaded.
+	getPosts();
 }]);

@@ -7,8 +7,14 @@ function($http, auth){
   var o = {
     posts: []
   };
-  o.getAll = function() {
-    return $http.get('/posts').success(function(data){
+  o.getAll = function(params) {
+  	if (!params) {
+  		params = {};
+  	};
+  	var config = {
+  		params: params
+  	};
+    return $http.get('/posts', config).success(function(data){
       angular.copy(data, o.posts);
     });
   };

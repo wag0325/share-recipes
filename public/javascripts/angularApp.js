@@ -23,9 +23,9 @@ function($stateProvider, $urlRouterProvider) {
       templateUrl: 'views/home.html',
       controller: 'HomeCtrl',
       resolve: {
-		    postPromise: ['posts', function(posts){
-		      return posts.getAll();
-		    }],
+		    // postPromise: ['posts', function(posts){
+		    //   return posts.getAll();
+		    // }],
 		    categoryPromise: ['categories', function(categories){
 		      return categories.getAll();
 		    }]
