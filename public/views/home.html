@@ -21,7 +21,7 @@
         <div id="Price">
         </div>
       </div>
-      <div class="content col-md-9">
+      <div class="content col-md-9" infinite-scroll='nextPage()' infinite-scroll-disabled='busy || noMoreData'>
         <div class="page-header">
           <h1>Share Recipes</h1>
         </div>
@@ -48,8 +48,9 @@
                 </p>
               </div>
             </div>
-          </div> 
+          </div>
         </div>
+        <div ng-show='busy'>Loading data...</div> 
       </div>
       </div>
     

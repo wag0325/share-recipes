@@ -1,0 +1,23 @@
+{
+  "name": "share-recipes",
+  "description": "recipes sharing app",
+  "main": "index.ejs",
+  "authors": [
+    "Lydia Kwag <wag0325@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/wag0325/share-recipes",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ngInfiniteScroll": "^1.2.2",
+    "angular-ui-router": "ui-router#^0.2.18",
+    "jquery": "^2.2.3"
+  }
+}

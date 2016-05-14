@@ -14,6 +14,7 @@ function($http, auth){
   	var config = {
   		params: params
   	};
+  	console.log(config);
     return $http.get('/posts', config).success(function(data){
       angular.copy(data, o.posts);
     });

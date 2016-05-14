@@ -19,10 +19,22 @@ router.get('/', function(req, res, next) {
 router.route('/posts')
   .get(function(req, res, next) {
     var limit = 20;
+    var filter = {};
+    // var query = JSON.stringify(req.query);
     var query = req.query;
+    console.log(query);
     limit = parseInt(query['limit']);
 
-    Post.find(function(err, posts){
+    // if (query['queryId']) {
+    //   var queryId = query['queryId'];
+    //   console.log(query['queryId']);
+    //   console.log(query['queryId']['_id']);
+    // }
+
+    if (query["lastId"]) {
+      filter["_id"] = {$lt: mongoose.Types.ObjectId(query["lastId"])};
+    }
+    Post.find( filter, function(err, posts){
       if(err){ return next(err); }
       res.json(posts);
     }).sort({_id:-1}).limit(limit);
