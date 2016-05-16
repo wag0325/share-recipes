@@ -38,19 +38,19 @@ function($http, auth){
 		return $http.delete('/posts/' + id + '/' + slug);
 	};
 	o.upvote = function(post) {
-	  return $http.put('/posts/' + post._id + '/upvote', null, {
+	  return $http.put('/posts/' + post._id + '/' + post.slug + '/upvote', null, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
 	  }).success(function(data){
 	    post.upvotes += 1;
 	  });
 	};
 	o.addComment = function(id, comment) {
-	  return $http.post('/posts/' + id + '/comments', comment, {
+	  return $http.post('/posts/' + id + '/' + slug + '/comments', comment, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
 	  });
 	};
 	o.upvoteComment = function(post, comment) {
-	  return $http.put('/posts/' + post._id + '/comments/'+ comment._id + '/upvote', null, {
+	  return $http.put('/posts/' + post._id + '/' + post.slug + '/comments/'+ comment._id + '/upvote', null, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
 	  }).success(function(data){
 	    comment.upvotes += 1;

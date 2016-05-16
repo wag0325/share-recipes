@@ -131,7 +131,7 @@ router.route('/posts/:post/:slug')
 // PUT individual post
 // DELETE individual post
 // PUT upvote individual post
-router.put('/posts/:post/upvote', auth, function(req, res, next) {
+router.put('/posts/:post/:slug/upvote', auth, function(req, res, next) {
   // Call the upvote method defined in post schema
   req.post.upvote(function(err, post){
     if (err) { return next(err); }
@@ -141,7 +141,7 @@ router.put('/posts/:post/upvote', auth, function(req, res, next) {
 });
 
 // POST individual comment
-router.post('/posts/:post/comments', auth, function(req, res, next) {
+router.post('/posts/:post/:slug/comments', auth, function(req, res, next) {
   var comment = new Comment(req.body);
   comment.post = req.post;
   comment.author = req.payload.username;
@@ -172,7 +172,7 @@ router.param('comment', function(req, res, next, id) {
 });
 // DELETE individual comment
 // PUT upvote individual comment
-router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, next) {
+router.put('/posts/:post/:slug/comments/:comment/upvote', auth, function(req, res, next) {
   // Call the upvote method defined in post schema
   req.comment.upvote(function(err, comment){
     if (err) { return next(err); }
