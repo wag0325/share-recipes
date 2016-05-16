@@ -9,12 +9,20 @@
           <select ng-model="orderProp" ng-init="orderProp = orderOptions[0]" ng-options="option.name for option in orderOptions">
           </select>
         </div>
-       
-        <div id="Tags">
-          Tags:
+        <h3>Filters</h3>
+        <div id="categories">
+          <h4>Categories</h4>
+          <div ng-repeat="cat in categories">
+            <label>
+              <input type="checkbox" ng-model="isCat" ng-change="selectCat(isCat, cat)"> {{cat.title}}
+            </label>
+          </div>
+        </div>
+        <div id="tags">
+          <h4>Tags</h4>
           <div ng-repeat="tag in allTags">
             <label>
-              <input type="checkbox" ng-model="tagChecked" ng-change="addRemoveTag(tagChecked, tag)"> {{tag}}
+              <input type="checkbox" ng-model="isTag" ng-change="selectTag(isTag, tag)"> {{tag}}
             </label>
           </div>
         </div>
@@ -48,6 +56,9 @@
                 </p>
               </div>
             </div>
+          </div>
+          <div ng-hide="posts.length">
+            <h2>Sorry, no recipes... </h2>
           </div>
         </div>
         <div ng-show='busy'>Loading data...</div> 

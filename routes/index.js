@@ -22,7 +22,9 @@ router.route('/posts')
     var filter = {};
     // var query = JSON.stringify(req.query);
     var query = req.query;
+    console.log("query");
     console.log(query);
+    console.log(typeof query);
     limit = parseInt(query['limit']);
 
     // if (query['queryId']) {
@@ -31,10 +33,32 @@ router.route('/posts')
     //   console.log(query['queryId']['_id']);
     // }
 
+    // Limit data
     if (query["lastId"]) {
       filter["_id"] = {$lt: mongoose.Types.ObjectId(query["lastId"])};
     }
-    Post.find( filter, function(err, posts){
+    // Add categories to filter 
+    if (query["cat"]){
+      var cat = query["cat"];
+      if (typeof cat != "string") {
+        for (i = 0; i < cat.length; i++){
+          cat[i] = mongoose.Types.ObjectId(cat[i]);
+        }
+        filter["category"] = {$in: cat};
+      } else {
+        filter["category"] = mongoose.Types.ObjectId(cat);
+      }
+    }
+    // Add tags to filter
+    if (query["tags"]){
+      var tags = query["tags"];
+      if (typeof tags != "string") {
+        filter["tags"] = {$in: tags};
+      } else {
+        filter["tags"] = tags;
+      }
+    }
+    Post.find(filter, function(err, posts){
       if(err){ return next(err); }
       res.json(posts);
     }).sort({_id:-1}).limit(limit);
