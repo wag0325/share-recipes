@@ -10,6 +10,10 @@ var PostSchema = new mongoose.Schema({
   author: String,
   tags: [String],
   upvotes: {type: Number, default: 0},
+  stars: [{
+    type: String,
+    ref: 'User'
+  }],
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
 }, { timestamps: { createdAt: 'created_at' } });
 
@@ -20,7 +24,6 @@ PostSchema.methods.upvote = function(cb) {
 
 // Slugify post title 
 function slugify(text) {
-
   return text.toString().toLowerCase()
     .replace(/\s+/g, '-')        // Replace spaces with -
     .replace(/[^\w\-]+/g, '')   // Remove all non-word chars

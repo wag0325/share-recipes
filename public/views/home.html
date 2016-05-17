@@ -47,6 +47,8 @@
                     ng-click="incrementUpvotes(post)"></span>
                     {{post.upvotes}} Likes | 
                   <a href="#/posts/{{post._id}}">{{post.comments.length}} Comments</a>
+                  <i class="fa fa-star-o" aria-hidden="true"
+                    ng-click="starred(post)">{{post.star.length}}Star</i>
                 </p>
                 <p>
                 <a href="#" class="btn btn-primary" href="{{post.link}}" role="button">Link</a> 

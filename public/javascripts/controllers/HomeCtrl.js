@@ -192,6 +192,9 @@ function($scope, posts, auth, $state, categories){
 	$scope.incrementUpvotes = function(post) {
 	  posts.upvote(post);
 	};
+	$scope.starred = function(post) {
+		posts.star(post);
+	};
 
 	// Execute functions when scope is loaded.
 	getPosts();

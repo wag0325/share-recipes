@@ -127,7 +127,26 @@ router.route('/posts/:post/:slug')
     });
   });
 
+// Star/unstar
+router.put('/posts/:post/:slug/star', auth, function(req, res, next) {
+  // Call the upvote method defined in post schema
+  // return res.send(req.payload._id);
+  // console.log(req.payload._id);
+  // console.log(req.payload);
+  // req.post = new Post(req.body);
+  req.post.stars.push(req.payload.username);
+  // req.post = new Post(req.body);
+  // req.post.star.push(ObjectId("572f4d41217e2378459ba8c9"));
+  req.post.save(function(err, post) {
+      if(err){ return next(err); }
 
+      res.json(post);
+    });
+});
+router.delete('/posts/:post/:slug/star', auth, function(req, res, next) {
+  // Call the upvote method defined in post schema
+  req.payload.username;
+});
 // PUT individual post
 // DELETE individual post
 // PUT upvote individual post

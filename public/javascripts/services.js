@@ -44,6 +44,13 @@ function($http, auth){
 	    post.upvotes += 1;
 	  });
 	};
+	o.star = function(post) {
+	  return $http.put('/posts/' + post._id + '/' + post.slug + '/star', null, {
+	    headers: {Authorization: 'Bearer '+auth.getToken()}
+	  }).success(function(data){
+	    console.log("success starred!");
+	  });
+	};
 	o.addComment = function(id, comment) {
 	  return $http.post('/posts/' + id + '/' + slug + '/comments', comment, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
