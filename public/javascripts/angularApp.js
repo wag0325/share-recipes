@@ -110,7 +110,7 @@ function($stateProvider, $urlRouterProvider) {
 			}]
 		}
 	})
-  .state('login', {
+  	.state('login', {
 	  url: '/login',
 	  templateUrl: 'public/views/login.html',
 	  controller: 'AuthCtrl',
@@ -120,6 +120,10 @@ function($stateProvider, $urlRouterProvider) {
 	    }
 	  }]
 	})
+	// .state('starred', {
+	// 	url:'/users/:userId/starred',
+	// 	templateUrl: 'public/views/'
+	// })
 	.state('register', {
 	  url: '/register',
 	  templateUrl: 'public/views/register.html',

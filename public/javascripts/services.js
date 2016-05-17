@@ -51,6 +51,14 @@ function($http, auth){
 	    console.log("success starred!");
 	  });
 	};
+	o.unstar = function(post) {
+		console.log("delete o.unstar");
+	  return $http.delete('/posts/' + post._id + '/' + post.slug + '/star', {
+	    headers: {Authorization: 'Bearer '+auth.getToken()}
+	  }).success(function(data){
+	    console.log("removed starred posts");
+	  });
+	};
 	o.addComment = function(id, comment) {
 	  return $http.post('/posts/' + id + '/' + slug + '/comments', comment, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}

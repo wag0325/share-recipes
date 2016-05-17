@@ -195,7 +195,9 @@ function($scope, posts, auth, $state, categories){
 	$scope.starred = function(post) {
 		posts.star(post);
 	};
-
+	$scope.unstarred = function(post) {
+		posts.unstar(post);
+	};
 	// Execute functions when scope is loaded.
 	getPosts();
 }]);
