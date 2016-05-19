@@ -64,7 +64,7 @@ function($stateProvider, $urlRouterProvider) {
 	    }],
 	    categoryPromise: ['categories', function(categories){
 		      return categories.getAll();
-		  }]
+		 }]
 	  }
 	})
   .state('categoriesCreate', {

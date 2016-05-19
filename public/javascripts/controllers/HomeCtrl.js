@@ -181,17 +181,16 @@ function($scope, posts, auth, $state, categories, query){
 	}
 
 	// noDuplicatesArr($scope.SelectedctedTags);
-	// $scope.editPost = function(id) {
-	// 	console.log("editPost", id);
-	// 	$state.go('postsedit', {id: id});
-	// };
+	$scope.editPost = function(post) {
+		$state.go('postsedit', {id: post._id, slug: post.slug});
+	};
 
-	$scope.deletePost = function(id) {
-		console.log("deletePost", id);
-		posts.delete(id).error(function(error){
+	$scope.deletePost = function(post) {
+		posts.delete(post._id, post.slug).error(function(error){
 	      $scope.error = error;
 	    }).then(function(){
-	      posts.getAll();
+	      $scope.posts.splice($scope.posts.indexOf(post), 1);
+	      console.log($scope.posts);
 	    });
 	}
 	$scope.incrementUpvotes = function(post) {

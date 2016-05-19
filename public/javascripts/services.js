@@ -4,37 +4,38 @@ app.factory('posts', [
 '$http', 
 'auth',
 function($http, auth){
-  var o = {
-    posts: []
-  };
-  o.getAll = function(params) {
-  	if (!params) {
-  		params = {};
-  	};
-  	var config = {
-  		params: params
-  	};
-  	console.log(config);
-    return $http.get('/posts', config).success(function(data){
-      angular.copy(data, o.posts);
-    });
-  };
-  o.get = function(id, slug) {
+	var o = {
+	posts: []
+	};
+	o.getAll = function(params) {
+		if (!params) {
+			params = {};
+		};
+		var config = {
+			params: params
+		};
+		console.log(config);
+	return $http.get('/posts', config).success(function(data){
+	  angular.copy(data, o.posts);
+	});
+	};
+ 	o.get = function(id, slug) {
 	  return $http.get('/posts/' + id + '/' + slug).then(function(res){
 	    return res.data;
 	  });
 	};
-  o.create = function(post) {
+  	o.create = function(post) {
 	  return $http.post('/posts', post, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
   	}).success(function(data){
 	    o.posts.push(data);
 	  });
 	};
-	o.update = function(id, post){
+	o.update = function(id, slug, post){
+		console.log("post service", post);
 		return $http.put('/posts/' + id + '/' + slug, post);
 	};
-	o.delete = function(id){
+	o.delete = function(id, slug){
 		return $http.delete('/posts/' + id + '/' + slug);
 	};
 	o.upvote = function(post) {

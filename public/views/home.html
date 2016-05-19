@@ -53,8 +53,8 @@
                 <p>
                 <a href="#" class="btn btn-primary" href="{{post.link}}" role="button">Link</a> 
                 <a ui-sref="posts({id:post._id, slug:post.slug})" class="btn btn-primary" role="button">Details</a>
-                <btn class="btn btn-primary" ng-click="editPost(post._id)" ng-show="post.author==$scope.currentUser">Edit</btn>
-                <btn class="btn btn-primary" ng-click="deletePost(post._id)" ng-show="post.author==$scope.currentUser">Delete</btn>
+                <btn class="btn btn-primary" ng-click="editPost(post)" ng-show="post.author==currentUser">Edit</btn>
+                <btn class="btn btn-primary" ng-click="deletePost(post)" ng-show="post.author==currentUser">Delete</btn>
                 <!-- <btn class="btn btn-default" ng-click="toggleStar(post)"><i ng-class="isStarred ? 'fa fa-star' : 'fa fa-star-o'" aria-hidden="true"></i> {{post.stars.length}}</btn> -->
                 </p>
               </div>

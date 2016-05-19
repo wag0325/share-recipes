@@ -7,9 +7,11 @@ app.controller('PostsCtrl', [
 'auth',
 '$state',
 function($scope, posts, post, auth, $state){
-	$scope.isLoggedIn = auth.isLoggedIn;
-	$scope.currentUser = auth.currentUser;
+	$scope.isLoggedIn = auth.isLoggedIn();
+	$scope.currentUser = auth.currentUser();
 	$scope.post = post;
+	console.log($scope.post);
+	console.log($scope.post.author);
 	$scope.addComment = function(){
 	  if($scope.body === '') { return; }
 	  posts.addComment(post._id, {
@@ -20,18 +22,16 @@ function($scope, posts, post, auth, $state){
 	  });
 	  $scope.body = '';
 	};
-	$scope.editPost = function(id) {
-		console.log("editPost", id);
-		$state.go('postsedit', {id: id});
+	$scope.editPost = function(post) {
+		$state.go('postsedit', {id: post._id});
 	};
-	$scope.deletePost = function(id) {
-		console.log("deletePost", id);
-		posts.delete(id, $scope.post.slug).error(function(error){
-      $scope.error = error;
-    }).then(function(){
-      $state.go('login');
-    });
-	};
+	$scope.deletePost = function(post) {
+		posts.delete(post._id, post.slug).error(function(error){
+	      $scope.error = error;
+	    }).then(function(){
+	      $state.go('home');
+	    });
+	}
 	$scope.incrementUpvotes = function(comment) {
 	  posts.upvoteComment(post, comment);
 	};

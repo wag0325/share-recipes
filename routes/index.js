@@ -131,20 +131,26 @@ router.route('/posts/:post/:slug')
     //   console.log(post);
     //   res.json(post);
     // });
-    req.post.remove(function(err, post){
-      if (err) { return next(err); }
-      return res.send("Successfully removed the post!");
-    });
-    if (req.body.tags) {
-      req.body.tags = req.body.tags.replace(/\s/g, '').split(",");
-    }
-    req.post = new Post(req.body);
-    console.log(req.post);
-    req.post.save(function(err, post){
-        if(err){ return next(err); }
+    // req.post.remove(function(err, post){
+    //   if (err) { return next(err); }
+    //   return res.send("Successfully removed the post!");
+    // });
+    // // if (req.body.tags) {
+    // //   req.body.tags = req.body.tags.replace(/\s/g, '').split(",");
+    // // }
+    // req.post = new Post(req.body);
+    // console.log(req.post);
+    // req.post.save(function(err, post){
+    //     if(err){ return next(err); }
 
-        // res.json(post);
+    //     // res.json(post);
+    //   });
+    console.log('post', req.post);
+    Post.update({_id: mongoose.Types.ObjectId(req.post._id)}, req.post, {upsert:true}, function(err, post){
+        if(err){ return next(err); }
+        res.json(post);
       });
+
   })
   .delete(function(req, res, next){
     req.post.remove(function(err, post){
