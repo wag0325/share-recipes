@@ -19,46 +19,72 @@ router.get('/', function(req, res, next) {
 router.route('/posts')
   .get(function(req, res, next) {
     var limit = 20;
-    var filter = {};
+    var filters = {};
     // var query = JSON.stringify(req.query);
     var query = req.query;
     console.log("query");
     console.log(query);
     console.log(typeof query);
-    limit = parseInt(query['limit']);
+    // limit = parseInt(query['limit']);
 
     // if (query['queryId']) {
     //   var queryId = query['queryId'];
     //   console.log(query['queryId']);
     //   console.log(query['queryId']['_id']);
     // }
-
-    // Limit data
-    if (query["lastId"]) {
-      filter["_id"] = {$lt: mongoose.Types.ObjectId(query["lastId"])};
-    }
-    // Add categories to filter 
-    if (query["cat"]){
-      var cat = query["cat"];
-      if (typeof cat != "string") {
-        for (i = 0; i < cat.length; i++){
-          cat[i] = mongoose.Types.ObjectId(cat[i]);
+    for (var k in query) {
+      if (query.hasOwnProperty(k)) {
+        console.log(k + ">" +query[k]);
+        if (k == "limit") {
+          limit = parseInt(query['limit']);
+        } else if (k == "lastId") {
+          filters["_id"] = {$lt: mongoose.Types.ObjectId(query[k])};
+        } else if (k == "cat") {
+          var cat = query[k];
+          if (typeof cat != "string") {
+            for (i = 0; i < cat.length; i++){
+              cat[i] = mongoose.Types.ObjectId(cat[i]);
+            }
+            filters["category"] = {$in: cat};
+          } else {
+            filters["category"] = mongoose.Types.ObjectId(cat);
+          }
+        } else if (k == "tags") {
+          var tags = query[k];
+          if (typeof tags != "string") {
+            filters["tags"] = {$in: tags};
+          } else {
+            filters["tags"] = tags;
+          }
+        } else {
+          filters[k] = query[k];
         }
-        filter["category"] = {$in: cat};
-      } else {
-        filter["category"] = mongoose.Types.ObjectId(cat);
       }
+      console.log(filters);
+      // if (q["lastId"]) {
+      //   filters["_id"] = {$lt: mongoose.Types.ObjectId(query["lastId"])};
+      // } else if (q["cat"]){
+      //   var cat = query["cat"];
+      //   if (typeof cat != "string") {
+      //     for (i = 0; i < cat.length; i++){
+      //       cat[i] = mongoose.Types.ObjectId(cat[i]);
+      //     }
+      //     filters["category"] = {$in: cat};
+      //   } else {
+      //     filters["category"] = mongoose.Types.ObjectId(cat);
+      //   }
+      // } else if (query["tags"]){
+      //   var tags = query["tags"];
+      //   if (typeof tags != "string") {
+      //     filters["tags"] = {$in: tags};
+      //   } else {
+      //     filters["tags"] = tags;
+      //   }
+      // } else {
+
+      // }
     }
-    // Add tags to filter
-    if (query["tags"]){
-      var tags = query["tags"];
-      if (typeof tags != "string") {
-        filter["tags"] = {$in: tags};
-      } else {
-        filter["tags"] = tags;
-      }
-    }
-    Post.find(filter, function(err, posts){
+    Post.find(filters, function(err, posts){
       if(err){ return next(err); }
       res.json(posts);
     }).sort({_id:-1}).limit(limit);
@@ -132,7 +158,6 @@ router.put('/posts/:post/:slug/star', auth, function(req, res, next) {
   req.post.stars.push(req.payload.username);
   req.post.save(function(err, post) {
       if(err){ return next(err); }
-
       res.json(post);
     });
 });

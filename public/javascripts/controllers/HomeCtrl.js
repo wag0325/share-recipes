@@ -1,11 +1,12 @@
 var app = angular.module('HomeCtrl', []);
 
 app.controller('HomeCtrl', [
-'$scope', 'posts', 'auth', '$state', 'categories',
-function($scope, posts, auth, $state, categories){
-	$scope.isLoggedIn = auth.isLoggedIn;
-	$scope.currentUser = auth.currentUser;
+'$scope', 'posts', 'auth', '$state', 'categories', 'query', 
+function($scope, posts, auth, $state, categories, query){
 
+	$scope.isLoggedIn = auth.isLoggedIn();
+	$scope.currentUser = auth.currentUser();
+	// $scope.posts = [];
 	// $scope.posts = posts.posts;
 	$scope.categories = categories.categories;
 	$scope.limit = 20;
@@ -13,7 +14,7 @@ function($scope, posts, auth, $state, categories){
 
 	$scope.busy = true;
 	$scope.noMoreData = false;
-
+	$scope.isStarred = false;
 	$scope.catChecked = false;
 	$scope.titleLimit = 15;
 	$scope.allCats = [];
@@ -24,18 +25,22 @@ function($scope, posts, auth, $state, categories){
 		{name: 'Most Liked', value: '-upvotes'},
 		{name: 'Newest', value: 'created_at'},
 	];
-	var query = {
+	var filters = {
 		"limit": $scope.limit,
 		"cat": selectedCat,
 		"tags": selectedTags
 	};
-
 	// Retreive posts
 	var getPosts = function(){
 		console.log("GetPosts");
+		console.log("query", query);
+		if (query != null) {
+			filters = angular.extend(filters, query);
+		}
+		console.log("filters", filters);
 		posts.getAll(
 		// {"limit": $scope.limit}
-		query
+		filters
 		).then(function(data){
 			console.log(data);
 			$scope.posts = data.data;
@@ -67,11 +72,11 @@ function($scope, posts, auth, $state, categories){
 		// var pageQuery = {"_id": {$lt: lastId}};
 
 		// add new properties to $scope.query
-		query["lastId"] = lastId;
-		console.log("query", query);
+		filters["lastId"] = lastId;
+		console.log("filters", filters);
 		posts.getAll(
 		// {"lastId": pageQuery}
-			query
+			filters
 		).then(function(data){
 			console.log(data);
 			console.log("concat");
@@ -115,7 +120,7 @@ function($scope, posts, auth, $state, categories){
 		}
 		console.log("selectedCat", selectedCat);
 		posts.getAll(
-			query
+			filters
 		).then(function(data){
 			console.log(data);
 			$scope.posts = data.data;
@@ -163,7 +168,7 @@ function($scope, posts, auth, $state, categories){
 		}
 		console.log(selectedTags);
 		posts.getAll(
-			query
+			filters
 		).then(function(data){
 			console.log(data);
 			$scope.posts = data.data;
@@ -184,20 +189,28 @@ function($scope, posts, auth, $state, categories){
 	$scope.deletePost = function(id) {
 		console.log("deletePost", id);
 		posts.delete(id).error(function(error){
-      $scope.error = error;
-    }).then(function(){
-      posts.getAll();
-    });
+	      $scope.error = error;
+	    }).then(function(){
+	      posts.getAll();
+	    });
 	}
 	$scope.incrementUpvotes = function(post) {
 	  posts.upvote(post);
 	};
 	$scope.starred = function(post) {
-		posts.star(post);
+		posts.star(post).then(function(data){
+			$scope.posts[$scope.posts.indexOf(post)] = data.data;
+		});
 	};
 	$scope.unstarred = function(post) {
-		posts.unstar(post);
+		posts.unstar(post).then(function(data){
+			$scope.posts[$scope.posts.indexOf(post)] = data.data;
+		});;
 	};
+	// console.log("currentUser", $stateParams.username);
+	$scope.isMyStar = function(post){
+		return post.stars && post.stars.indexOf($scope.currentUser) !== -1;
+	}
 	// Execute functions when scope is loaded.
 	getPosts();
 }]);

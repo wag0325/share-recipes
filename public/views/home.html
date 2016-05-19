@@ -42,19 +42,20 @@
               <div class="caption">
                 <h4><a href="#/posts/{{post._id}}">{{post.title | limitTo:titleLimit}}</a></h4>
                 <p>
-                {{post.category}}
+                <!-- {{post.category}} -->
                   <span class="glyphicon glyphicon-thumbs-up"
                     ng-click="incrementUpvotes(post)"></span>
                     {{post.upvotes}} Likes | 
                   <a href="#/posts/{{post._id}}">{{post.comments.length}} Comments</a>
-                  <a href="#"><i class="fa fa-star-o" aria-hidden="true" ng-click="starred(post)">{{post.star.length}}Star</i></a>
-                  <a href="#"><i class="fa fa-star" aria-hidden="true" ng-click="unstarred(post)">{{post.star.length}}Unstar</i></a>
+                  <btn class="btn btn-default" ng-if="!isMyStar(post)"><i class="fa fa-star-o" aria-hidden="true" ng-click="starred(post)"> {{post.stars.length}}</i></btn>
+                  <btn class="btn btn-default" ng-if="isMyStar(post)"><i class="fa fa-star" aria-hidden="true" ng-click="unstarred(post)"> {{post.stars.length}}</i></btn>
                 </p>
                 <p>
                 <a href="#" class="btn btn-primary" href="{{post.link}}" role="button">Link</a> 
                 <a ui-sref="posts({id:post._id, slug:post.slug})" class="btn btn-primary" role="button">Details</a>
                 <btn class="btn btn-primary" ng-click="editPost(post._id)" ng-show="post.author==$scope.currentUser">Edit</btn>
                 <btn class="btn btn-primary" ng-click="deletePost(post._id)" ng-show="post.author==$scope.currentUser">Delete</btn>
+                <!-- <btn class="btn btn-default" ng-click="toggleStar(post)"><i ng-class="isStarred ? 'fa fa-star' : 'fa fa-star-o'" aria-hidden="true"></i> {{post.stars.length}}</btn> -->
                 </p>
               </div>
             </div>

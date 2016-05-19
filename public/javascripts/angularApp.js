@@ -29,7 +29,8 @@ function($stateProvider, $urlRouterProvider) {
 		    // }],
 		    categoryPromise: ['categories', function(categories){
 		      return categories.getAll();
-		    }]
+		    }],
+		    query: function(){return null;}
 	  	}
     })
     .state('postsCreate', {
@@ -110,6 +111,16 @@ function($stateProvider, $urlRouterProvider) {
 			}]
 		}
 	})
+	.state('starred', {
+		url:'/users/:username/starred',
+		templateUrl: 'public/views/home.html',
+		controller: 'HomeCtrl',
+		resolve: {
+			query: function($stateParams) {
+				return {stars: $stateParams.username}
+			}
+		}
+	})
   	.state('login', {
 	  url: '/login',
 	  templateUrl: 'public/views/login.html',
@@ -120,10 +131,6 @@ function($stateProvider, $urlRouterProvider) {
 	    }
 	  }]
 	})
-	// .state('starred', {
-	// 	url:'/users/:userId/starred',
-	// 	templateUrl: 'public/views/'
-	// })
 	.state('register', {
 	  url: '/register',
 	  templateUrl: 'public/views/register.html',
