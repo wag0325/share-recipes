@@ -23,8 +23,8 @@ function($scope, posts, auth, $state, categories, query){
 	var selectedTags = [];
 	$scope.orderOptions = [
 		{name: 'Newest', value: {_id: -1}},
-		{name: 'Most Liked', value: {_id: -1, upvotes: -1}},
-		{name: "Most Stars", value: {_id: -1, starsCount: -1}}
+		{name: 'Most Liked', value: {upvotes: -1, _id: -1 }},
+		{name: "Most Stars", value: {starsCount: -1, _id: -1}}
 	];
 	$scope.orderProp = $scope.orderOptions[0];
 	var filters = {
@@ -99,7 +99,10 @@ function($scope, posts, auth, $state, categories, query){
 			}
 		});
 	};
-
+	$scope.removeFilters = function() {
+		$scope.isCat = null;
+		$scope.isTag = null;
+	}
 	// Categories in an array
 	for (var i =0; i <$scope.categories.length; i++){
 		if ($scope.allCats.indexOf($scope.categories[i].title == -1)) {

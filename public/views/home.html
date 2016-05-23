@@ -10,6 +10,7 @@
           </select>
         </div>
         <h3>Filters</h3>
+        <btn class="btn btn-default" ng-click="removeFilters()">Clear</btn>
         <div id="categories">
           <h4>Categories</h4>
           <div ng-repeat="cat in categories">
@@ -23,6 +24,14 @@
           <div ng-repeat="tag in allTags">
             <label>
               <input type="checkbox" ng-model="isTag" ng-change="selectTag(isTag, tag)"> {{tag}}
+            </label>
+          </div>
+        </div>
+        <div id="tags">
+          <h4>Rating</h4>
+          <div ng-repeat="rating in ratingOptions">
+            <label>
+              <input type="checkbox" ng-model="isRating" ng-change="selectRating(isRating, rating)"> {{rating}}
             </label>
           </div>
         </div>

@@ -43,7 +43,6 @@ router.route('/posts')
           for (k in sort) {
             sort[k] = parseInt(sort[k]);
           }
-          console.log("sort", sort);
         }else if (k == "lastId") {
           filters["_id"] = {$lt: mongoose.Types.ObjectId(query[k])};
         } else if (k == "lastStar") {
@@ -71,7 +70,6 @@ router.route('/posts')
           filters[k] = query[k];
         }
       }
-      console.log("filters", filters);
       // if (q["lastId"]) {
       //   filters["_id"] = {$lt: mongoose.Types.ObjectId(query["lastId"])};
       // } else if (q["cat"]){
@@ -95,10 +93,12 @@ router.route('/posts')
 
       // }
     }
+    console.log("filters", filters);
+    console.log("sort", sort);
     Post.find(filters, function(err, posts){
       if(err){ return next(err); }
       res.json(posts);
-    }).sort(sort).limit(limit);
+    }).sort({_id:-1}).limit(limit);
   })
   .post(auth, function(req, res, next) {
     if (req.body.tags) {
