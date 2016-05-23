@@ -6,7 +6,7 @@
         </div>
         <div id="sortby">
           Sort by:
-          <select ng-model="orderProp" ng-init="orderProp = orderOptions[0]" ng-options="option.name for option in orderOptions">
+          <select ng-model="orderProp" ng-init="orderProp = orderOptions[0]" ng-options="option.name for option in orderOptions" ng-change="sort()">
           </select>
         </div>
         <h3>Filters</h3>
@@ -36,7 +36,7 @@
         <a href="/#/create" class="btn btn-primary">Create Recipes</a>
         <a href="/#/createcategory" class="btn btn-primary">Categories</a>
         <div class="row">
-          <div class="col-sm-4 col-md-3" ng-repeat="post in posts | orderBy:orderProp.value | filter: query">
+          <div class="col-sm-4 col-md-3" ng-repeat="post in posts | filter: query">
             <div class="thumbnail">
               <img src="{{post.img_url}}" style="width: 100%; height:200px;"/>
               <div class="caption">
@@ -47,8 +47,8 @@
                     ng-click="incrementUpvotes(post)"></span>
                     {{post.upvotes}} Likes | 
                   <a href="#/posts/{{post._id}}">{{post.comments.length}} Comments</a>
-                  <btn class="btn btn-default" ng-if="!isMyStar(post)"><i class="fa fa-star-o" aria-hidden="true" ng-click="starred(post)"> {{post.stars.length}}</i></btn>
-                  <btn class="btn btn-default" ng-if="isMyStar(post)"><i class="fa fa-star" aria-hidden="true" ng-click="unstarred(post)"> {{post.stars.length}}</i></btn>
+                  <btn class="btn btn-default" ng-if="!isMyStar(post)"><i class="fa fa-star-o" aria-hidden="true" ng-click="starred(post)"> {{post.starsCount}}</i></btn>
+                  <btn class="btn btn-default" ng-if="isMyStar(post)"><i class="fa fa-star" aria-hidden="true" ng-click="unstarred(post)"> {{post.starsCount}}</i></btn>
                 </p>
                 <p>
                 <a href="#" class="btn btn-primary" href="{{post.link}}" role="button">Link</a> 

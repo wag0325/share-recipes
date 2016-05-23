@@ -19,6 +19,7 @@ router.get('/', function(req, res, next) {
 router.route('/posts')
   .get(function(req, res, next) {
     var limit = 20;
+    var sort;
     var filters = {};
     // var query = JSON.stringify(req.query);
     var query = req.query;
@@ -37,8 +38,18 @@ router.route('/posts')
         console.log(k + ">" +query[k]);
         if (k == "limit") {
           limit = parseInt(query['limit']);
-        } else if (k == "lastId") {
+        } else if (k == "sort"){
+          sort = query[k];
+          for (k in sort) {
+            sort[k] = parseInt(sort[k]);
+          }
+          console.log("sort", sort);
+        }else if (k == "lastId") {
           filters["_id"] = {$lt: mongoose.Types.ObjectId(query[k])};
+        } else if (k == "lastStar") {
+          filters["starsCount"] = {$lt: query[k]};
+        } else if (k == "lastUpvote") {
+          filters["upvotes"] = {$lt: query[k]}; 
         } else if (k == "cat") {
           var cat = query[k];
           if (typeof cat != "string") {
@@ -60,7 +71,7 @@ router.route('/posts')
           filters[k] = query[k];
         }
       }
-      console.log(filters);
+      console.log("filters", filters);
       // if (q["lastId"]) {
       //   filters["_id"] = {$lt: mongoose.Types.ObjectId(query["lastId"])};
       // } else if (q["cat"]){
@@ -87,7 +98,7 @@ router.route('/posts')
     Post.find(filters, function(err, posts){
       if(err){ return next(err); }
       res.json(posts);
-    }).sort({_id:-1}).limit(limit);
+    }).sort(sort).limit(limit);
   })
   .post(auth, function(req, res, next) {
     if (req.body.tags) {
@@ -162,6 +173,9 @@ router.route('/posts/:post/:slug')
 // Star/unstar
 router.put('/posts/:post/:slug/star', auth, function(req, res, next) {
   req.post.stars.push(req.payload.username);
+  req.post.upStarCount(function(err, post){
+    if (err) { return next(err); }
+  });
   req.post.save(function(err, post) {
       if(err){ return next(err); }
       res.json(post);
@@ -170,6 +184,9 @@ router.put('/posts/:post/:slug/star', auth, function(req, res, next) {
 router.delete('/posts/:post/:slug/star', auth, function(req, res, next) {
   // console.log("delete");
   req.post.stars.pull(req.payload.username);
+  req.post.downStarCount(function(err, post){
+    if (err) { return next(err); }
+  });
   req.post.save(function(err, post) {
       if(err){ return next(err); }
       res.json(post);

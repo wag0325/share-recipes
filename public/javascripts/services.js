@@ -49,6 +49,7 @@ function($http, auth){
 	  return $http.put('/posts/' + post._id + '/' + post.slug + '/star', null, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
 	  }).success(function(data){
+	  	post.starsCount += 1;
 	    console.log("success starred!");
 	  });
 	};
@@ -57,6 +58,7 @@ function($http, auth){
 	  return $http.delete('/posts/' + post._id + '/' + post.slug + '/star', {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
 	  }).success(function(data){
+	  	post.starsCount -= 1;
 	    console.log("removed starred posts");
 	  });
 	};

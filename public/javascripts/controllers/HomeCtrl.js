@@ -22,16 +22,20 @@ function($scope, posts, auth, $state, categories, query){
 	var selectedCat = [];
 	var selectedTags = [];
 	$scope.orderOptions = [
-		{name: 'Most Liked', value: '-upvotes'},
-		{name: 'Newest', value: 'created_at'},
+		{name: 'Newest', value: {_id: -1}},
+		{name: 'Most Liked', value: {_id: -1, upvotes: -1}},
+		{name: "Most Stars", value: {_id: -1, starsCount: -1}}
 	];
+	$scope.orderProp = $scope.orderOptions[0];
 	var filters = {
 		"limit": $scope.limit,
 		"cat": selectedCat,
-		"tags": selectedTags
+		"tags": selectedTags,
+		"sort": $scope.orderProp.value
 	};
 	// Retreive posts
 	var getPosts = function(){
+		$scope.posts = [];
 		console.log("GetPosts");
 		console.log("query", query);
 		if (query != null) {
@@ -60,19 +64,26 @@ function($scope, posts, auth, $state, categories, query){
 		});
 	};
 	getPosts();
-
 	$scope.nextPage = function() {
 		if($scope.busy){
 			return;
 		}
 		$scope.busy = true;
-		var lastId = $scope.posts[$scope.posts.length-1]._id;
-
+		var lastPost = $scope.posts[$scope.posts.length-1];
+		var lastId = lastPost._id;
+		// add new properties to $scope.query
+		filters["lastId"] = lastId; 
+		if ($scope.orderProp.value["stars"]){
+			var lastStar = lastPost.stars;
+			filters["lastStar"] = lastStar;
+		} else if ($scope.orderProp.value["upvotes"]){
+			var lastUpvote = lastPost.upvotes;
+			filters["lastUpvote"] = lastUpvote;
+		}
 		// var pageQuery = angular.merge(query, {_id: {$lt: lastId}});
 		// var pageQuery = {"_id": {$lt: lastId}};
 
-		// add new properties to $scope.query
-		filters["lastId"] = lastId;
+		
 		console.log("filters", filters);
 		posts.getAll(
 		// {"lastId": pageQuery}
@@ -97,6 +108,16 @@ function($scope, posts, auth, $state, categories, query){
 	}
 	console.log($scope.allCats);
 
+	$scope.sort = function() {
+		// if ($scope.orderProp.value) {
+		// 	return
+		// }
+		// if ($scope.orderProp.name !== 'Newest')
+			filters["sort"] = $scope.orderProp.value;
+			console.log("filters", filters);
+			getPosts();
+		// }
+	};
 	// $scope.addRemoveCat = function(checked, cat){
 	// 	console.log(checked, cat);
 	// 	var catIndex = $scope.selectedCat.indexOf(cat);
