@@ -134,7 +134,9 @@ function($scope, posts, auth, $state, categories, query){
 
 	// add/remove cat in selectedCat 
 	$scope.selectCat = function(isCat, cat){
+		console.log(isCat, cat);
 		if (selectedCat[cat._id] === undefined && isCat == true) {
+			console.log("selectedCat", selectedCat[cat._id]);
 			selectedCat.push(cat._id); 
 		} else if (isCat == false) {
 			var index = selectedCat.indexOf(cat._id);
@@ -142,6 +144,15 @@ function($scope, posts, auth, $state, categories, query){
 				selectedCat.splice(index, 1);
 			}
 		}
+
+		// if (selectedCat[cat._id] === undefined && isCat == true) {
+		// 	selectedCat.push(cat._id); 
+		// } else if (isCat == false) {
+		// 	var index = selectedCat.indexOf(cat._id);
+		// 	if (index > -1){
+		// 		selectedCat.splice(index, 1);
+		// 	}
+		// }
 		console.log("selectedCat", selectedCat);
 		posts.getAll(
 			filters

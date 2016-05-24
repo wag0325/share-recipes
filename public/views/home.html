@@ -25,8 +25,8 @@
             </label>
           </div>
         </div>
-        <div id="price" class="filter-item">
-        </div>
+        <!-- <div id="price" class="filter-item">
+        </div> -->
       </div>
       <div class="content col-sm-9 col-md-10" infinite-scroll='nextPage()' infinite-scroll-disabled='busy || noMoreData'>
         <div class="row">
@@ -38,11 +38,11 @@
             <h1>Share Recipes</h1>
           </div>
         </div>
-        <div class="row">
+        <div class="row content-nav-wrapper">
           <div class="content-nav horizontal-nav">
-            <ul class="pull-left">
+            <!-- <ul class="pull-left">
               <li>1-24 of 230495 results</li>
-            </ul>
+            </ul> -->
             <ul class="pull-right">
               <li>Sort by:
               <select ng-model="orderProp" ng-init="orderProp = orderOptions[0]" ng-options="option.name for option in orderOptions" ng-change="sort()">
@@ -55,15 +55,15 @@
             <div class="thumbnail">
               <img src="{{post.img_url}}" style="width: 100%; height:200px;"/>
               <div class="caption">
-                <h4><a href="#/posts/{{post._id}}">{{post.title | limitTo:titleLimit}}</a></h4>
+                <h4><a ui-sref="posts({id:post._id, slug:post.slug})">{{post.title | limitTo:titleLimit}}</a></h4>
                 <p>
                 <!-- {{post.category}} -->
                   <span class="glyphicon glyphicon-thumbs-up"
                     ng-click="incrementUpvotes(post)"></span>
                     {{post.upvotes}} Likes | 
                   <a href="#/posts/{{post._id}}">{{post.comments.length}} Comments</a>
-                  <btn class="btn btn-default" ng-if="!isMyStar(post)"><i class="fa fa-star-o" aria-hidden="true" ng-click="starred(post)"> {{post.starsCount}}</i></btn>
-                  <btn class="btn btn-default" ng-if="isMyStar(post)"><i class="fa fa-star" aria-hidden="true" ng-click="unstarred(post)"> {{post.starsCount}}</i></btn>
+                  <btn class="btn btn-default" ng-if="!isMyStar(post)"><i class="fa fa-heart-o" aria-hidden="true" ng-click="starred(post)"> {{post.starsCount}}</i></btn>
+                  <btn class="btn btn-default" ng-if="isMyStar(post)"><i class="fa fa-heart" aria-hidden="true" ng-click="unstarred(post)"> {{post.starsCount}}</i></btn>
                 </p>
                 <p>
                 <a href="#" class="btn btn-primary" href="{{post.link}}" role="button">Link</a> 
