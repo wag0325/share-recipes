@@ -1,51 +1,57 @@
 
       <div class="row">
-      <div class="sidebar col-md-3">
-        <div id="searchbar">
-          Search: <input ng-model="query">
+      <div class="sidebar col-sm-3 col-md-2">
+        <!-- <div id="searchbar">
+          <input ng-model="query" placeholder="Search...">
         </div>
-        <div id="sortby">
-          Sort by:
-          <select ng-model="orderProp" ng-init="orderProp = orderOptions[0]" ng-options="option.name for option in orderOptions" ng-change="sort()">
-          </select>
+ -->        
+        <div id="filters">
+          <span class="filter-hd">Filters</span>
+          <a style="float:right;" ng-click="removeFilters()">Clear</a>
         </div>
-        <h3>Filters</h3>
-        <btn class="btn btn-default" ng-click="removeFilters()">Clear</btn>
-        <div id="categories">
-          <h4>Categories</h4>
+        <div id="categories" class="filter-item">
+          <div class="filter-item-hd">Categories</div>
           <div ng-repeat="cat in categories">
             <label>
-              <input type="checkbox" ng-model="isCat" ng-change="selectCat(isCat, cat)"> {{cat.title}}
+              <input type="checkbox" ng-model="isCat" ng-change="selectCat(isCat, cat)"><span>{{cat.title}}</span>
             </label>
           </div>
         </div>
-        <div id="tags">
-          <h4>Tags</h4>
+        <div id="tags" class="filter-item">
+          <div class="filter-item-hd">Tags</div>
           <div ng-repeat="tag in allTags">
             <label>
-              <input type="checkbox" ng-model="isTag" ng-change="selectTag(isTag, tag)"> {{tag}}
+              <input type="checkbox" ng-model="isTag" ng-change="selectTag(isTag, tag)"><span>{{tag}}</span>
             </label>
           </div>
         </div>
-        <div id="tags">
-          <h4>Rating</h4>
-          <div ng-repeat="rating in ratingOptions">
-            <label>
-              <input type="checkbox" ng-model="isRating" ng-change="selectRating(isRating, rating)"> {{rating}}
-            </label>
-          </div>
-        </div>
-        <div id="Price">
+        <div id="price" class="filter-item">
         </div>
       </div>
-      <div class="content col-md-9" infinite-scroll='nextPage()' infinite-scroll-disabled='busy || noMoreData'>
-        <div class="page-header">
-          <h1>Share Recipes</h1>
-        </div>
-        <a href="/#/create" class="btn btn-primary">Create Recipes</a>
-        <a href="/#/createcategory" class="btn btn-primary">Categories</a>
+      <div class="content col-sm-9 col-md-10" infinite-scroll='nextPage()' infinite-scroll-disabled='busy || noMoreData'>
         <div class="row">
-          <div class="col-sm-4 col-md-3" ng-repeat="post in posts | filter: query">
+          <div class="ctrl pull-right">
+            <a href="/#/create" class="btn btn-primary">Create Recipes</a>
+            <a href="/#/createcategory" class="btn btn-primary">Categories</a>
+          </div>
+          <div class="page-header">
+            <h1>Share Recipes</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="content-nav horizontal-nav">
+            <ul class="pull-left">
+              <li>1-24 of 230495 results</li>
+            </ul>
+            <ul class="pull-right">
+              <li>Sort by:
+              <select ng-model="orderProp" ng-init="orderProp = orderOptions[0]" ng-options="option.name for option in orderOptions" ng-change="sort()">
+              </select></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-md-4" ng-repeat="post in posts | filter: query">
             <div class="thumbnail">
               <img src="{{post.img_url}}" style="width: 100%; height:200px;"/>
               <div class="caption">
