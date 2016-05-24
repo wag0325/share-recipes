@@ -13,7 +13,7 @@
           <div class="filter-item-hd">Categories</div>
           <div ng-repeat="cat in categories">
             <label>
-              <input type="checkbox" ng-model="isCat" ng-change="selectCat(isCat, cat)"><span>{{cat.title}}</span>
+              <input type="checkbox" ng-model="cat.isCat" ng-change="selectCat(cat.isCat, cat)"><span>{{cat.title}}</span>
             </label>
           </div>
         </div>
@@ -21,7 +21,7 @@
           <div class="filter-item-hd">Tags</div>
           <div ng-repeat="tag in allTags">
             <label>
-              <input type="checkbox" ng-model="isTag" ng-change="selectTag(isTag, tag)"><span>{{tag}}</span>
+              <input type="checkbox" ng-model="tag.isTag" ng-change="selectTag(tag.isTag, tag)"><span>{{tag.name}}</span>
             </label>
           </div>
         </div>

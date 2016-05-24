@@ -53,14 +53,7 @@ function($scope, posts, auth, $state, categories, query){
 				$scope.noMoreData = true;
 			}
 			$scope.busy = false;
-			// Tags from posts
-			for (var i = 0; i < $scope.posts.length; i++) {
-				for (var j = 0; j < $scope.posts[i].tags.length; j++){
-					if ($scope.allTags.indexOf($scope.posts[i].tags[j]) == -1) {
-		    		$scope.allTags.push($scope.posts[i].tags[j]);
-					}
-				}
-			}
+			retreiveTags($scope.posts);
 		});
 	};
 	getPosts();
@@ -100,8 +93,33 @@ function($scope, posts, auth, $state, categories, query){
 		});
 	};
 	$scope.removeFilters = function() {
-		$scope.isCat = null;
-		$scope.isTag = null;
+		
+		
+		angular.forEach($scope.categories, function(cat){
+			cat.isCat = false;
+		});
+		console.log("categories", $scope.categories);
+		console.log("tags", $scope.tags);
+		angular.forEach($scope.tags, function(tag){
+			$scope.isTag = false;
+			console.log("selected Tag", tag, $scope.isTag);
+		});
+		selectedCat.splice(0, selectedCat.length);
+		selectedTags.splice(0, selectedTags.length);
+		console.log("selectedCat", selectedCat);
+		console.log("filters", filters);
+		posts.getAll(
+			filters
+		).then(function(data){
+			console.log(data);
+			$scope.posts = data.data;
+
+			if ($scope.posts.length < 2) {
+				$scope.noMoreData = true;
+			}
+			$scope.busy = false;
+			retreiveTags($scope.posts);		
+		});
 	}
 	// Categories in an array
 	for (var i =0; i <$scope.categories.length; i++){
@@ -110,6 +128,7 @@ function($scope, posts, auth, $state, categories, query){
 		}
 	}
 	console.log($scope.allCats);
+	console.log("categories", $scope.categories);
 
 	$scope.sort = function() {
 		// if ($scope.orderProp.value) {
@@ -164,15 +183,7 @@ function($scope, posts, auth, $state, categories, query){
 				$scope.noMoreData = true;
 			}
 			$scope.busy = false;
-			// Tags from posts
-			$scope.allTags = [];
-			for (var i = 0; i < $scope.posts.length; i++) {
-				for (var j = 0; j < $scope.posts[i].tags.length; j++){
-					if ($scope.allTags.indexOf($scope.posts[i].tags[j]) == -1) {
-		    		$scope.allTags.push($scope.posts[i].tags[j]);
-					}
-				}
-			}
+			retreiveTags($scope.posts);
 		});
 	};
 	// Initial - all selected tags
@@ -181,7 +192,7 @@ function($scope, posts, auth, $state, categories, query){
 	// $scope.tagChecked = true;
 	// Selected Tags
 	$scope.selectTag = function(isTag, tag){
-		console.log(tag);
+		console.log("tag", tag);
 		// // var defaultIndex = $scope.selectedTags.indexOf('default');
 		// var tagIndex = selectedTags.indexOf(tag);
 		// // if(defaultIndex != -1) {
@@ -193,10 +204,10 @@ function($scope, posts, auth, $state, categories, query){
 		// else {
 		// 	selectedTags.splice(tagIndex);
 		// }
-		if (selectedTags[tag] === undefined && isTag == true) {
-			selectedTags.push(tag); 
+		if (selectedTags[tag.name] === undefined && isTag == true) {
+			selectedTags.push(tag.name); 
 		} else if (isTag == false) {
-			var index = selectedTags.indexOf(tag);
+			var index = selectedTags.indexOf(tag.name);
 			if (index > -1){
 				selectedTags.splice(index, 1);
 			}
@@ -245,6 +256,20 @@ function($scope, posts, auth, $state, categories, query){
 	$scope.isMyStar = function(post){
 		return post.stars && post.stars.indexOf($scope.currentUser) !== -1;
 	}
+	var checkDuplicateObjectAndAdd = function(name) {
+		var found = $scope.allTags.some(function(el){
+			return el.name == name;
+		});
+		if(!found){$scope.allTags.push({name: name})}
+	};
+	var retreiveTags = function(posts) {
+		$scope.allTags = [];
+		for (var i = 0; i < posts.length; i++) {
+			for (var j = 0; j < posts[i].tags.length; j++){
+				checkDuplicateObjectAndAdd(posts[i].tags[j]);
+			}
+		}
+	};
 	// Execute functions when scope is loaded.
 	getPosts();
 }]);
