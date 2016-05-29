@@ -1,13 +1,24 @@
 var mongoose = require('mongoose');
+var Category = require('./Categories.js');
+var CategorySchema = mongoose.model('Category').schema;
 
 var PostSchema = new mongoose.Schema({
   title: String,
   slug: { type:String, maxlength:40 },
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+  // category: CategorySchema,
   link: String,
   img_url: String,
+  // img_url: [{type: String, match: /^http:\/\//i}],
   body: String,
   author: String,
+  price: {
+    amount: {type: Number},
+    currency: {
+      type: String,
+      enum: ['USD', 'EUR', 'GBP']
+    }
+  },
   tags: [String],
   upvotes: {type: Number, default: 0},
   stars: [{

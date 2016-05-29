@@ -8,7 +8,15 @@ var CategorySchema = new mongoose.Schema({
 		trim: true,
 		unique: true,
 		required: 'Slug cannot be blank' },
-	desc: String
+	desc: String,
+	parent_slug: {
+		type: String,
+		ref: 'Category'
+	},
+	ancestors_slug: [{
+		type: String,
+		ref: 'Category'
+	}]
 });
 
 mongoose.model('Category', CategorySchema);

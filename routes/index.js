@@ -99,6 +99,10 @@ router.route('/posts')
       if(err){ return next(err); }
       res.json(posts);
     }).sort({_id:-1}).limit(limit);
+    Post.find(filters, function(err, posts){
+      if(err){return next(err);}
+      res.json(posts);
+    }).sort(sort).skip(pageSize*(n-1)).limit(pageSize);
   })
   .post(auth, function(req, res, next) {
     if (req.body.tags) {
