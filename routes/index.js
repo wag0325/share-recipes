@@ -343,8 +343,8 @@ router.post('/register', function(req, res, next){
   var user = new User();
 
   user.username = req.body.username;
-
-  user.setPassword(req.body.password)
+  user.email = req.body.email;
+  user.setPassword(req.body.password);
 
   user.save(function (err){
     if(err){ return next(err); }
