@@ -39,15 +39,23 @@ router.route('/posts')
         if (k == "limit") {
           limit = parseInt(query['limit']);
         } else if (k == "sort"){
-          sort = query[k];
-          for (k in sort) {
-            sort[k] = parseInt(sort[k]);
+          sort = JSON.parse(query[k]);
+          console.log("sort", sort);
+        } else if (k == "lastValue") {
+          var last = JSON.parse(query[k]);
+          for (var k in last) {
+            if (k == "_id") {
+              filters[k] = {$lt: mongoose.Types.ObjectId(last[k])};
+            } else {
+              filters[k] = {$lt: last[k]};
+            }
           }
-        }else if (k == "lastId") {
+          console.log("last", last);
+        }else if (k == "lastId" && k !== "lastStarsCount" && k !== "lastUpvote") {
           filters["_id"] = {$lt: mongoose.Types.ObjectId(query[k])};
-        } else if (k == "lastStar") {
+        } else if (k == "lastStarsCount") {
           filters["starsCount"] = {$lt: query[k]};
-        } else if (k == "lastUpvote") {
+        }else if (k == "lastUpvote") {
           filters["upvotes"] = {$lt: query[k]}; 
         } else if (k == "cat") {
           var cat = query[k];
@@ -98,11 +106,12 @@ router.route('/posts')
     Post.find(filters, function(err, posts){
       if(err){ return next(err); }
       res.json(posts);
-    }).sort({_id:-1}).limit(limit);
-    Post.find(filters, function(err, posts){
-      if(err){return next(err);}
-      res.json(posts);
-    }).sort(sort).skip(pageSize*(n-1)).limit(pageSize);
+    }).sort(sort).limit(limit);
+
+    // Post.find(filters, function(err, posts){
+    //   if(err){return next(err);}
+    //   res.json(posts);
+    // }).sort(sort).skip(pageSize*(page_num-1)).limit(pageSize);
   })
   .post(auth, function(req, res, next) {
     if (req.body.tags) {

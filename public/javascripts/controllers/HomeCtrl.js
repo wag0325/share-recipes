@@ -23,8 +23,8 @@ function($scope, posts, auth, $state, categories, query){
 	var selectedTags = [];
 	$scope.orderOptions = [
 		{name: 'Newest', value: {_id: -1}},
-		{name: 'Most Liked', value: {upvotes: -1, _id: -1 }},
-		{name: "Most Stars", value: {starsCount: -1, _id: -1}}
+		{name: 'Most Liked', value: {upvotes: -1}},
+		{name: "Most Stars", value: {starsCount: -1}}
 	];
 	$scope.orderProp = $scope.orderOptions[0];
 	var filters = {
@@ -36,6 +36,7 @@ function($scope, posts, auth, $state, categories, query){
 	// Retreive posts
 	var getPosts = function(){
 		$scope.posts = [];
+		filters["lastValue"] = {}; 
 		console.log("GetPosts");
 		console.log("query", query);
 		if (query != null) {
@@ -58,6 +59,7 @@ function($scope, posts, auth, $state, categories, query){
 	};
 	getPosts();
 	$scope.nextPage = function() {
+		console.log("nextPAge");
 		if($scope.busy){
 			return;
 		}
@@ -65,13 +67,18 @@ function($scope, posts, auth, $state, categories, query){
 		var lastPost = $scope.posts[$scope.posts.length-1];
 		var lastId = lastPost._id;
 		// add new properties to $scope.query
-		filters["lastId"] = lastId; 
-		if ($scope.orderProp.value["stars"]){
-			var lastStar = lastPost.stars;
-			filters["lastStar"] = lastStar;
+		
+		if ($scope.orderProp.value["_id"]) {
+			console.log("newest", $scope.orderProp.value["_id"]);
+			filters["lastValue"] = {_id: lastId}; 
+		}else if ($scope.orderProp.value["starsCount"]){
+			var lastStarsCount = lastPost.starsCount;
+			// filters["lastStarsCount"] = lastStarsCount;
+			filters["lastValue"] = {starsCount: lastStarsCount};
 		} else if ($scope.orderProp.value["upvotes"]){
 			var lastUpvote = lastPost.upvotes;
-			filters["lastUpvote"] = lastUpvote;
+			// filters["lastUpvote"] = lastUpvote;
+			filters["lastValue"] = {upvotes: lastUpvote};
 		}
 		// var pageQuery = angular.merge(query, {_id: {$lt: lastId}});
 		// var pageQuery = {"_id": {$lt: lastId}};

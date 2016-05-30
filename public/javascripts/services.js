@@ -150,7 +150,7 @@ app.factory('auth', ['$http', '$window', function($http, $window){
 	 	if(auth.isLoggedIn()){
 	    var token = auth.getToken();
 	    var payload = JSON.parse($window.atob(token.split('.')[1]));
-	    console.log(payload.username);
+	    // console.log(payload.username);
 	    return payload.username;
 	  }
 	};
