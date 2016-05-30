@@ -23,6 +23,7 @@ function($scope, posts, auth, $state, categories, query){
 	var selectedTags = [];
 	$scope.orderOptions = [
 		{name: 'Newest', value: {_id: -1}},
+		{name: 'Popular', value: {viewCounts: -1}},
 		{name: 'Most Liked', value: {upvotes: -1}},
 		{name: "Most Stars", value: {starsCount: -1}}
 	];
@@ -79,6 +80,9 @@ function($scope, posts, auth, $state, categories, query){
 			var lastUpvote = lastPost.upvotes;
 			// filters["lastUpvote"] = lastUpvote;
 			filters["lastValue"] = {upvotes: lastUpvote};
+		} else if ($scope.orderProp.value["viewCounts"]) {
+			var lastViewCounts = lastPost.viewCounts;
+			filters["lastValue"] = {viewCounts: lastViewCounts};
 		}
 		// var pageQuery = angular.merge(query, {_id: {$lt: lastId}});
 		// var pageQuery = {"_id": {$lt: lastId}};

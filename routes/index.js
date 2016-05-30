@@ -144,6 +144,9 @@ router.param('post', function(req, res, next, id) {
 
 router.route('/posts/:post/:slug')
   .get(function(req, res, next) {
+    req.post.viewCount(function(err, post){
+      if (err) { return next(err); }
+    });
     req.post.populate('comments', function(err, post) {
       if (err) { return next(err); }
       res.json(req.post);

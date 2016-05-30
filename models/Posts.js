@@ -26,6 +26,7 @@ var PostSchema = new mongoose.Schema({
     ref: 'User'
   }],
   starsCount: {type: Number, default: 0},
+  viewCounts: {type: Number, default: 0},
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
 }, { timestamps: { createdAt: 'created_at' } });
 
@@ -33,7 +34,10 @@ PostSchema.methods.upvote = function(cb) {
   this.upvotes += 1;
   this.save(cb);
 };
-
+PostSchema.methods.viewCount = function(cb) {
+  this.viewCounts += 1;
+  this.save(cb);
+};
 PostSchema.methods.upStarCount = function(cb) {
   this.starsCount += 1;
   this.save(cb);
