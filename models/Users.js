@@ -39,6 +39,6 @@ UserSchema.methods.generateJWT = function() {
 };
 
 UserSchema.methods.setToken = function() {
-  var token = crypto.randomBytes(16).toString('hex');
+  return crypto.randomBytes(16).toString('hex');
 };
 mongoose.model('User', UserSchema);

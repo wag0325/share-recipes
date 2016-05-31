@@ -390,7 +390,9 @@ router.post('/forgot', function(req, res, next){
       //   user.save();
       //   return res.status(200).json({msg: 'password reset successful'});
       // });
-      user.setPassword(req.body.password);
+      user.resetPasswordToken = user.setToken();
+      user.resetPasswordExpires = Date.now() + 3600000;
+      // user.setPassword(req.body.password);
       user.save(function (err){
         if(err){ return next(err); }
 
@@ -400,6 +402,40 @@ router.post('/forgot', function(req, res, next){
       // return res.status(200).json({status:0, msg: 'This user does not exist'});
       return res.status(200).json({msg: 'This user does not exist'});
     }
+  });
+});
+
+router.get('/reset/:token', function(req, res, next){
+  User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}}, function(err, user){
+    if (err) { return next(err); }
+    if(!user) {
+      req.flash('error', 'Password reset token is invalid or has expired.');
+      return res.redirect('/forgot');
+    }
+    res.render('reset', {
+      user: req.user
+    });
+  });
+});
+
+router.post('/reset/:token', function(req, res, next){
+  User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}}, function(err, user){
+    if (err) { return next(err); }
+    if(!user) {
+      req.flash('error', 'Password reset token is invalid or has expired.');
+      return res.redirect('/forgot');
+    }
+    
+    user.setPassword(req.body.password);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    user.save(function (err){
+      if(err){ return next(err); }
+
+      return res.json({token: user.generateJWT()})
+    });
+
   });
 });
 module.exports = router;
