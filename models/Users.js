@@ -7,7 +7,9 @@ var UserSchema = new mongoose.Schema({
   email: {type: String, lowercase: true, unique: true, required:true, match: /.+@.+\..+/},
   hash: String,
   salt: String,
-  role: {type:String, enum: ['Admin', 'User'], default: 'User'}
+  role: {type:String, enum: ['Admin', 'User'], default: 'User'},
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 });
 
 UserSchema.methods.setPassword = function(password){
@@ -36,4 +38,7 @@ UserSchema.methods.generateJWT = function() {
   }, 'SECRET');
 };
 
+UserSchema.methods.setToken = function() {
+  var token = crypto.randomBytes(16).toString('hex');
+};
 mongoose.model('User', UserSchema);

@@ -370,4 +370,36 @@ router.post('/login', function(req, res, next){
   })(req, res, next);
 });
 
+router.get('/forgot', function(req, res, next){
+  res.render('forgot', {
+    user: req.user
+  });
+});
+
+router.post('/forgot', function(req, res, next){
+  
+  // return res.send(req.body.email);
+  User.findOne({email: req.body.email}, function(err, user){
+    if (err) { return next(err); }
+    
+    
+
+    // res.json(user);
+    if(user) {
+      // user.setPassword(newPasswordString, function(){
+      //   user.save();
+      //   return res.status(200).json({msg: 'password reset successful'});
+      // });
+      user.setPassword(req.body.password);
+      user.save(function (err){
+        if(err){ return next(err); }
+
+        return res.json({token: user.generateJWT()})
+      });
+    } else {
+      // return res.status(200).json({status:0, msg: 'This user does not exist'});
+      return res.status(200).json({msg: 'This user does not exist'});
+    }
+  });
+});
 module.exports = router;
