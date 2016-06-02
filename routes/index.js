@@ -3,12 +3,14 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var passport = require('passport');
 var jwt = require('express-jwt');
+var nodemailer = require('nodemailer');
+var cred = require('../cred.js');
 
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
 var Category = mongoose.model('Category');
 var User = mongoose.model('User');
-var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
+var auth = jwt({secret: cred.JWT_SECRET, userProperty: cred.JWT_USER});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -377,30 +379,80 @@ router.get('/forgot', function(req, res, next){
 });
 
 router.post('/forgot', function(req, res, next){
-  
   // return res.send(req.body.email);
   User.findOne({email: req.body.email}, function(err, user){
     if (err) { return next(err); }
-    
-    
-
     // res.json(user);
     if(user) {
       // user.setPassword(newPasswordString, function(){
       //   user.save();
       //   return res.status(200).json({msg: 'password reset successful'});
       // });
-      user.resetPasswordToken = user.setToken();
+      var token = user.setToken();
+      user.resetPasswordToken = token;
       user.resetPasswordExpires = Date.now() + 3600000;
       // user.setPassword(req.body.password);
+
+
+      var transporter = nodemailer.createTransport({
+          service: cred.SERVICE_TYPE,
+          auth: {
+              user: cred.SERVICE_USER,
+              pass: cred.SERVICE_PASS
+          }
+      });
+
+      var mailOptions = {
+        to: user.email,
+        from: 'passwordreset@demo.com',
+        subject: 'Node.js Password Reset',
+        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+          'http://' + req.headers.host + '/#/reset/' + token + '\n\n' +
+          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+      };
+      transporter.sendMail(mailOptions, function(err) {
+        return res.json({message:'An e-mail has been sent to ' + user.email + ' with further instructions.'});
+        // req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+        // done(err, 'done');
+      });
+      // console.log('created');
+      // transporter.sendMail({
+      // from: 'wag0325@gmail.com',
+      //   to: 'sahn889@gmail.com',
+      //   subject: 'hello world!',
+      //   text: 'hello world!'
+      // });
+      // var smtpTransport = nodemailer.createTransport('SMTP', {
+      //   service: 'Gmail',
+      //   auth: {
+      //     user: 'wag0325@gmail.com',
+      //     pass: 'lido2025gmail'
+      //   }
+      // });
+      // var mailOptions = {
+      //   to: user.email,
+      //   from: 'passwordreset@demo.com',
+      //   subject: 'Node.js Password Reset',
+      //   text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+      //     'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+      //     'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+      //     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+      // };
+      // smtpTransport.sendMail(mailOptions, function(err) {
+      //   console.log('An e-mail has been sent to ' + user.email + ' with further instructions.');
+      //   // req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+      //   // done(err, 'done');
+      // });
+
       user.save(function (err){
         if(err){ return next(err); }
 
-        return res.json({token: user.generateJWT()})
+        // return res.json({token: user.generateJWT()})
       });
     } else {
       // return res.status(200).json({status:0, msg: 'This user does not exist'});
-      return res.status(200).json({msg: 'This user does not exist'});
+      return res.status(200).json({message: 'This user does not exist'});
     }
   });
 });
@@ -409,8 +461,9 @@ router.get('/reset/:token', function(req, res, next){
   User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}}, function(err, user){
     if (err) { return next(err); }
     if(!user) {
-      req.flash('error', 'Password reset token is invalid or has expired.');
-      return res.redirect('/forgot');
+      return res.status(400).json({message: 'Password reset token is invalid or has expired.'});
+      // req.flash('error', 'Password reset token is invalid or has expired.');
+      // return res.redirect('/forgot');
     }
     res.render('reset', {
       user: req.user
@@ -419,11 +472,13 @@ router.get('/reset/:token', function(req, res, next){
 });
 
 router.post('/reset/:token', function(req, res, next){
+  console.log(req.params.token);
   User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}}, function(err, user){
     if (err) { return next(err); }
     if(!user) {
-      req.flash('error', 'Password reset token is invalid or has expired.');
-      return res.redirect('/forgot');
+      return res.status(400).json({message: 'Password reset token is invalid or has expired.'});
+      // req.flash('error', 'Password reset token is invalid or has expired.');
+      // return res.redirect('/forgot');
     }
     
     user.setPassword(req.body.password);
@@ -433,7 +488,7 @@ router.post('/reset/:token', function(req, res, next){
     user.save(function (err){
       if(err){ return next(err); }
 
-      return res.json({token: user.generateJWT()})
+      return res.json({token: user.generateJWT(), message: 'Successfuly reset your password!'})
     });
 
   });

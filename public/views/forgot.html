@@ -1,10 +1,17 @@
+<div class="page-header">
+  <h1>Forgot Password</h1>
+</div>
+
 <div ng-show="error" class="alert alert-danger row">
   <span>{{ error.message }}</span>
 </div>
+<div ng-show="msg" class="alert alert-info row">
+  <span>{{ msg.message }}</span>
+</div>
 
-<form ng-submit="resetPassword()"
+<form ng-submit="forgot()"
   style="margin-top:30px;">
-  <h3>Reset Password</h3>
+  <!-- <h3>Forgot Password</h3> -->
 
   <div class="form-group">
     <input type="text"
@@ -12,5 +19,5 @@
     placeholder="Email"
     ng-model="user.email"></input>
   </div>
-  <button type="submit" class="btn btn-primary">Register</button>
+  <button type="submit" class="btn btn-primary">Reset Password</button>
 </form>

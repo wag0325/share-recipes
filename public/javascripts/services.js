@@ -174,5 +174,13 @@ app.factory('auth', ['$http', '$window', function($http, $window){
 	  $window.localStorage.removeItem('share-recipes-token');
 	};
 
+	auth.forgot = function(user) {
+		return $http.post('/forgot', user).success(function(data){
+		});
+	};
+	auth.reset = function(token, user) {
+		return $http.post('/reset/'+ token, user).success(function(data){
+		});
+	};
 	return auth;
 }]);

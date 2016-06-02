@@ -140,6 +140,31 @@ function($stateProvider, $urlRouterProvider) {
 	      $state.go('home');
 	    }
 	  }]
+	})
+	.state('forgot', {
+	  url: '/forgot',
+	  templateUrl: 'public/views/forgot.html',
+	  controller: 'AuthCtrl',
+	  onEnter: ['$state', 'auth', function($state, auth){
+	    if(auth.isLoggedIn()){
+	      $state.go('home');
+	    }
+	  }]
+	})
+	.state('reset', {
+	  url: '/reset/:token',
+	  templateUrl: 'public/views/reset.html',
+	  controller: 'AuthCtrl',
+	 //  resolve: {
+	 //    token: ['$stateParams', function($stateParams) {
+	 //      return posts.get($stateParams.id);
+	 //    }]
+		// },
+	  onEnter: ['$state', 'auth', function($state, auth){
+	    if(auth.isLoggedIn()){
+	      $state.go('home');
+	    }
+	  }]
 	});
   $urlRouterProvider.otherwise('home');
 }]);
