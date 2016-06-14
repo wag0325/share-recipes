@@ -11,7 +11,9 @@ var Comment = mongoose.model('Comment');
 var Category = mongoose.model('Category');
 var User = mongoose.model('User');
 var auth = jwt({secret: cred.JWT_SECRET, userProperty: cred.JWT_USER});
-
+var ForumCategory = mongoose.model('ForumCategory');
+var ForumTopic = mongoose.model('ForumTopic');
+var ForumReply = mongoose.model('ForumReply');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });

@@ -28,7 +28,7 @@ var PostSchema = new mongoose.Schema({
   starsCount: {type: Number, default: 0},
   viewCounts: {type: Number, default: 0},
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
-}, { timestamps: { createdAt: 'created_at' } });
+}, { timestamps: true });
 
 PostSchema.methods.upvote = function(cb) {
   this.upvotes += 1;
