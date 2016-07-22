@@ -1,0 +1,41 @@
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>paizaQA</h1>
+    <p class="lead">Kick-start your next web app with Angular Fullstack</p>
+    <img src="assets/images/yeoman.png" alt="I'm Yeoman">
+  </div>
+</header>
+
+<div class="container">
+  <br/>
+  <div style="text-align: center">
+    <a type="button" class="btn btn-primary" ui-sref="questionsCreate">Ask Question</a>
+  </div>
+
+  <table class="table table-striped" infinite-scroll='nextPage()' infinite-scroll-disabled='busy || noMoreData'>
+    <thead>
+      <tr>
+        <th>Question</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="question in questions">
+        <td>
+          <a ui-sref="questionsShow({id:question._id, slug:question.slug})" style="font-size: large">{{question.title}}</a>
+          <div>
+            <span ng-repeat="tag in question.tags">
+              <span class="label label-info">
+                {{tag.text}}
+              </span>
+              &nbsp;
+            </span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-hide="questions.length">
+    <h2>Sorry, no questions... </h2>
+  </div>
+  <div ng-show='busy'>Loading data...</div> 
+</div>

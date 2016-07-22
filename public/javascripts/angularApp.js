@@ -1,12 +1,17 @@
 var app = angular.module('shareRecipes', [
 	'ui.router',
 	'infinite-scroll',
+	'ngTagsInput',
+	'textAngular',
 	'HomeCtrl',
 	'PostsCtrl',
 	'CreatePostsCtrl',
 	'UpdatePostsCtrl',
 	'CategoriesCtrl',
 	'CreateCategoriesCtrl',
+	'QuestionsIndexCtrl',
+	'QuestionsCreateCtrl',
+	'QuestionsShowCtrl',
 	'AuthCtrl',
 	'NavCtrl',
 	'services',
@@ -110,6 +115,26 @@ function($stateProvider, $urlRouterProvider) {
 				// return "category";
 			}]
 		}
+	})
+	.state('questionsIndex', {
+		url:'/forum',
+		templateUrl: 'public/views/questionsIndex.html',
+		controller: 'QuestionsIndexCtrl'
+	})
+	.state('questionsCreate', {
+		url:'/forum/ask',
+		templateUrl: 'public/views/questionsCreate.html',
+		controller: 'QuestionsCreateCtrl'
+	})
+	.state('questionsShow', {
+		url:'/forum/topic/:id/:slug',
+		templateUrl: 'public/views/questionsShow.html',
+		controller: 'QuestionsShowCtrl',
+		resolve: {
+		    question: ['$stateParams', 'questions', function($stateParams, questions) {
+		      return questions.get($stateParams.id, $stateParams.slug);
+		    }]
+		 }
 	})
 	.state('starred', {
 		url:'/users/:username/starred',

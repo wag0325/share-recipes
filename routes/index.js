@@ -9,11 +9,13 @@ var cred = require('../cred.js');
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
 var Category = mongoose.model('Category');
+var Question = mongoose.model('Question');
+var Answer = mongoose.model('Answer');
 var User = mongoose.model('User');
 var auth = jwt({secret: cred.JWT_SECRET, userProperty: cred.JWT_USER});
-var ForumCategory = mongoose.model('ForumCategory');
-var ForumTopic = mongoose.model('ForumTopic');
-var ForumReply = mongoose.model('ForumReply');
+// var ForumCategory = mongoose.model('ForumCategory');
+// var ForumTopic = mongoose.model('ForumTopic');
+// var ForumReply = mongoose.model('ForumReply');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -30,13 +32,7 @@ router.route('/posts')
     console.log("query");
     console.log(query);
     console.log(typeof query);
-    // limit = parseInt(query['limit']);
 
-    // if (query['queryId']) {
-    //   var queryId = query['queryId'];
-    //   console.log(query['queryId']);
-    //   console.log(query['queryId']['_id']);
-    // }
     for (var k in query) {
       if (query.hasOwnProperty(k)) {
         console.log(k + ">" +query[k]);
@@ -226,7 +222,7 @@ router.put('/posts/:post/:slug/upvote', auth, function(req, res, next) {
 });
 
 // POST individual comment
-router.post('/posts/:post/:slug/comments', auth, function(req, res, next) {
+router.post('/posts/:post/comments', auth, function(req, res, next) {
   var comment = new Comment(req.body);
   comment.post = req.post;
   comment.author = req.payload.username;
@@ -338,6 +334,178 @@ router.get('/categories/:category/posts', function(req, res, next) {
     res.json(posts);
   });
 });
+
+// GET questions 
+router.get('/questions', function(req, res, next){
+  var limit = 5;
+  var sort = {createdAt: -1};
+  var filters = {};
+  var query = req.query;
+  // console.log("query");
+  // console.log(query);
+  // console.log(typeof query);
+
+  for (var k in query) {
+    if (query.hasOwnProperty(k)) {
+      console.log(k + ">" +query[k]);
+      if (k == "limit") {
+        limit = parseInt(query['limit']);
+      } else if (k == "sort"){
+        sort = JSON.parse(query[k]);
+        console.log("sort", sort);
+      } else if (k == "lastValue") {
+        var last = JSON.parse(query[k]);
+        for (var k in last) {
+          if (k == "_id") {
+            filters[k] = {$lt: mongoose.Types.ObjectId(last[k])};
+          } else {
+            filters[k] = {$lt: last[k]};
+          }
+        }
+        console.log("last", last);
+      }else if (k == "lastId" && k !== "lastStarsCount" && k !== "lastUpvote") {
+        filters["_id"] = {$lt: mongoose.Types.ObjectId(query[k])};
+      } else if (k == "lastStarsCount") {
+        filters["starsCount"] = {$lt: query[k]};
+      }else if (k == "lastUpvote") {
+        filters["upvotes"] = {$lt: query[k]}; 
+      } else if (k == "cat") {
+        var cat = query[k];
+        if (typeof cat != "string") {
+          for (i = 0; i < cat.length; i++){
+            cat[i] = mongoose.Types.ObjectId(cat[i]);
+          }
+          filters["category"] = {$in: cat};
+        } else {
+          filters["category"] = mongoose.Types.ObjectId(cat);
+        }
+      } else if (k == "tags") {
+        var tags = query[k];
+        if (typeof tags != "string") {
+          filters["tags"] = {$in: tags};
+        } else {
+          filters["tags"] = tags;
+        }
+      } else {
+        filters[k] = query[k];
+      }
+    }
+  }
+  // console.log("filters", filters);
+  // console.log("sort", sort);
+  // Post.find(filters, function(err, posts){
+  //   if(err){ return next(err); }
+  //   res.json(posts);
+  // }).sort(sort).limit(limit);
+
+  Question.find(filters, function(err, questions){
+    if(err){ return next(err); }
+
+    res.json(questions);
+  }).sort(sort).limit(limit);
+})
+
+router.post('/questions', auth, function(req, res, next) {
+    // if (req.body.tags) {
+    //   req.body.tags = req.body.tags.replace(/\s/g, '').split(",");
+    // }
+    console.log("questiion from req", req.body);
+    var question = new Question(req.body);
+    // post.tags = post.tags.replace(/\s/''/g).split(",");
+    // post.category = req.category;
+    question.author = req.payload.username;
+    console.log("questiion from routes", question);
+    question.save(function(err, question){
+      if(err){ return next(err); }
+
+      res.json(question);
+    });
+  });
+
+// Load :question faster
+router.param('question', function(req, res, next, id) {
+  var query = Question.findById(id);
+
+  query.exec(function (err, question){
+    if (err) { return next(err); }
+    if (!question) { return next(new Error('can\'t find the post')); }
+
+    req.question = question;
+    return next();
+  });
+});
+
+router.route('/questions/:question/:slug')
+  .get(function(req, res, next) {
+    // req.question.viewCount(function(err, question){
+    //   if (err) { return next(err); }
+    // });
+    req.question.populate('answers', function(err, question) {
+      if (err) { return next(err); }
+      res.json(req.question);
+    });
+  })
+  .put(function(req, res, next) {
+    console.log('question', req.question);
+    Question.update({_id: mongoose.Types.ObjectId(req.post._id)}, req.question, {upsert:true}, function(err, question){
+        if(err){ return next(err); }
+        res.json(question);
+      });
+  })
+  .delete(function(req, res, next){
+    req.question.remove(function(err, question){
+      if (err) { return next(err); }
+      return res.send("Successfully removed the question!");
+    });
+  });
+
+// POST individual answer
+router.post('/questions/:question/answers', auth, function(req, res, next) {
+  var answer = new Answer(req.body);
+  answer.question = req.question;
+  answer.author = req.payload.username;
+
+  answer.save(function(err, comment){
+    if(err){ return next(err); }
+
+    req.question.answers.push(answer);
+    req.question.save(function(err, question) {
+      if(err){ return next(err);}
+      res.json(answer);
+    });
+  });
+});
+
+// Load :post faster
+router.param('answer', function(req, res, next, id) {
+  var query = Answer.findById(id);
+
+  query.exec(function (err, answer){
+    if (err) { return next(err); }
+    if (!comment) { return next(new Error('can\'t find answer')); }
+
+    req.answer = answer;
+    return next();
+  });
+});
+
+// PUT individual answer 
+router.put('/questions/:question/answers/:answer', auth, function(req, res, next){
+  console.log('question', req.question);
+  Question.update({_id: mongoose.Types.ObjectId(req.post._id)}, req.question, {upsert:true}, function(err, question){
+    if(err){ return next(err); }
+    res.json(question);
+  });
+});
+
+// Delete individual answer
+router.delete('/questions/:question/answers/:answer', auth, function(req, res, next){
+  req.question.remove(function(err, question){
+    if (err) { return next(err); }
+    return res.send("Successfully removed the question!");
+  });
+});
+
 // POST register
 router.post('/register', function(req, res, next){
   if(!req.body.username || !req.body.password){

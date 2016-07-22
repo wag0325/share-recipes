@@ -14,15 +14,23 @@
  <html>
   <head>
     <title>Share Recipes</title>
+    <!-- CSS plugins-->
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/bower_components/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/bower_components/textAngular/dist/textAngular.css">
+    <link rel="stylesheet" href="/bower_components/ng-tags-input/ng-tags-input.min.css">    
+    <!-- css -->
     <link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css">
+
     <!-- JS plugins -->
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/angular/angular.min.js"></script>
     <script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
-
+    <script src="/bower_components/textAngular/dist/textAngular-rangy.min.js"></script>
+    <script src="/bower_components/textAngular/dist/textAngular-sanitize.min.js"></script>
+    <script src="/bower_components/textAngular/dist/textAngular.min.js"></script>
+    <script type="text/javascript" src="/bower_components/ng-tags-input/ng-tags-input.min.js"></script>
     <!-- JS -->
     <script src="/public/javascripts/controllers/HomeCtrl.js"></script>
     <script src="/public/javascripts/controllers/PostsCtrl.js"></script>
@@ -30,6 +38,9 @@
     <script src="/public/javascripts/controllers/UpdatePostsCtrl.js"></script>
     <script src="/public/javascripts/controllers/CategoriesCtrl.js"></script>
     <script src="/public/javascripts/controllers/CreateCategoriesCtrl.js"></script>
+    <script src="/public/javascripts/controllers/QuestionsIndexCtrl.js"></script>
+    <script src="/public/javascripts/controllers/QuestionsCreateCtrl.js"></script>
+    <script src="/public/javascripts/controllers/QuestionsShowCtrl.js"></script>
     <script src="/public/javascripts/controllers/AuthCtrl.js"></script>
     <script src="/public/javascripts/controllers/NavCtrl.js"></script>
     <script src="/public/javascripts/services.js"></script>
@@ -65,6 +76,7 @@
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+              <li><a ui-sref="questionsIndex">Forum</a></li>
               <li ng-show="isLoggedIn()"><a>Hi, {{ currentUser() }}</a></li>
               <li ng-show="isLoggedIn()"><a href="/#/users/{{currentUser()}}/starred">Starred</a></li>
               <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>

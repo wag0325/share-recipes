@@ -63,7 +63,7 @@ function($http, auth){
 	  });
 	};
 	o.addComment = function(id, comment) {
-	  return $http.post('/posts/' + id + '/' + slug + '/comments', comment, {
+	  return $http.post('/posts/' + id + '/comments', comment, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
 	  });
 	};
@@ -89,20 +89,20 @@ function($http, auth){
       angular.copy(data, cat.categories);
     	});
 	  };
-	  cat.get = function(id) {
+	cat.get = function(id) {
 	  	return $http.get('/categories/' + id).then(function(res){
 	    	return res.data;
 	  	});
-		};
+	};
 	cat.getBySlug = function(slug) {
 	  	return $http.get('/categories/' + slug).then(function(res){
 	    	return res.data;
 	  	});
-		};
+	};
 	cat.create = function(category){
 		return $http.post('/categories', category, {
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
-  	});
+  		});
 	};
 	cat.getPosts = function(id) {
 		return $http.get('/categories/' + id + '/posts').then(function(res){
@@ -118,6 +118,89 @@ function($http, auth){
 		return $http.delete('/categories/' + id);
 	}
 	return cat;
+}]);
+
+app.factory('questions', [
+'$http', 
+'auth',
+function($http, auth){
+	var q = {
+	questions: []
+	};
+	q.getAll = function(params) {
+		if (!params) {
+			params = {};
+		};
+		var config = {
+			params: params
+		};
+		console.log(config);
+		return $http.get('/questions', config).success(function(data){
+		  angular.copy(data, q.posts);
+		});
+	};
+ 	q.get = function(id, slug) {
+	  return $http.get('/questions/' + id + '/' + slug).then(function(res){
+	    return res.data;
+	  });
+	};
+  	q.create = function(question) {
+  		console.log("question", question);
+	  return $http.post('/questions', question, {
+	    headers: {Authorization: 'Bearer '+auth.getToken()}
+  	}).success(function(data){
+	    q.questions.push(data);
+	  });
+	};
+	q.addAnswer = function(id, answer) {
+	  return $http.post('/questions/' + id + '/answers', answer, {
+	    headers: {Authorization: 'Bearer '+auth.getToken()}
+	  });
+	};
+	// o.update = function(id, slug, post){
+	// 	console.log("post service", post);
+	// 	return $http.put('/posts/' + id + '/' + slug, post);
+	// };
+	// o.delete = function(id, slug){
+	// 	return $http.delete('/posts/' + id + '/' + slug);
+	// };
+	// o.upvote = function(post) {
+	//   return $http.put('/posts/' + post._id + '/' + post.slug + '/upvote', null, {
+	//     headers: {Authorization: 'Bearer '+auth.getToken()}
+	//   }).success(function(data){
+	//     post.upvotes += 1;
+	//   });
+	// };
+	// o.star = function(post) {
+	//   return $http.put('/posts/' + post._id + '/' + post.slug + '/star', null, {
+	//     headers: {Authorization: 'Bearer '+auth.getToken()}
+	//   }).success(function(data){
+	//   	post.starsCount += 1;
+	//     console.log("success starred!");
+	//   });
+	// };
+	// o.unstar = function(post) {
+	// 	console.log("delete o.unstar");
+	//   return $http.delete('/posts/' + post._id + '/' + post.slug + '/star', {
+	//     headers: {Authorization: 'Bearer '+auth.getToken()}
+	//   }).success(function(data){
+	//   	post.starsCount -= 1;
+	//     console.log("removed starred posts");
+	//   });
+	// };
+	// o.addComment = function(id, comment) {
+	//   return $http.post('/posts/' + id + '/' + slug + '/comments', comment, {
+	//     headers: {Authorization: 'Bearer '+auth.getToken()}
+	//   });
+	// };
+	// o.upvoteComment = function(post, comment) {
+	//   return $http.put('/posts/' + post._id + '/' + post.slug + '/comments/'+ comment._id + '/upvote', null, {
+	//     headers: {Authorization: 'Bearer '+auth.getToken()}
+	//   }).success(function(data){
+	//     comment.upvotes += 1;
+	//   });
+	// };
+  return q;
 }]);
 
 app.factory('auth', ['$http', '$window', function($http, $window){

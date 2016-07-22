@@ -19,6 +19,8 @@
     "ngInfiniteScroll": "^1.2.2",
     "angular-ui-router": "ui-router#^0.2.18",
     "jquery": "^2.2.3",
-    "font-awesome": "^4.6.3"
+    "font-awesome": "^4.6.3",
+    "textAngular": "^1.5.2",
+    "ng-tags-input": "^3.1.1"
   }
 }
