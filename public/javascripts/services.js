@@ -157,6 +157,11 @@ function($http, auth){
 	    headers: {Authorization: 'Bearer '+auth.getToken()}
 	  });
 	};
+	q.addReply = function(post_id, answer_id, reply) {
+	  return $http.post('/questions/' + post_id + '/answers/' + answer_id + '/replies', reply, {
+	    headers: {Authorization: 'Bearer '+auth.getToken()}
+	  });
+	};
 	// o.update = function(id, slug, post){
 	// 	console.log("post service", post);
 	// 	return $http.put('/posts/' + id + '/' + slug, post);

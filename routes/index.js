@@ -465,7 +465,7 @@ router.post('/questions/:question/answers', auth, function(req, res, next) {
   answer.question = req.question;
   answer.author = req.payload.username;
 
-  answer.save(function(err, comment){
+  answer.save(function(err, answer){
     if(err){ return next(err); }
 
     req.question.answers.push(answer);
@@ -482,7 +482,7 @@ router.param('answer', function(req, res, next, id) {
 
   query.exec(function (err, answer){
     if (err) { return next(err); }
-    if (!comment) { return next(new Error('can\'t find answer')); }
+    if (!answer) { return next(new Error('can\'t find answer')); }
 
     req.answer = answer;
     return next();
@@ -498,12 +498,45 @@ router.put('/questions/:question/answers/:answer', auth, function(req, res, next
   });
 });
 
-// Delete individual answer
+// DELETE individual answer
 router.delete('/questions/:question/answers/:answer', auth, function(req, res, next){
   req.question.remove(function(err, question){
     if (err) { return next(err); }
     return res.send("Successfully removed the question!");
   });
+});
+
+
+var answer = new Answer(req.body);
+  answer.question = req.question;
+  answer.author = req.payload.username;
+
+  answer.save(function(err, answer){
+    if(err){ return next(err); }
+
+    req.question.answers.push(answer);
+    req.question.save(function(err, question) {
+      if(err){ return next(err);}
+      res.json(answer);
+    });
+  });
+  
+// POST replies to answer
+router.post('/questions/:question/answers/:answer/replies', auth, function(req, res, next){
+  var reply = new Answer(req.body);
+  reply.answer = req.answer; 
+  reply.author = req.payload.username;
+
+  reply.save(function(err, reply){
+    if(err){ return next(err); }
+
+    req.answer.replies.push(reply);
+    req.answer.save(function(err, answer) {
+      if(err){ return next(err);}
+      res.json(answer);
+    });
+  });
+
 });
 
 // POST register

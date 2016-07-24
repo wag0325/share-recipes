@@ -12,7 +12,7 @@ function($scope, $state, questions, question, auth){
 
 	$scope.question = question;
 	$scope.submitAnswer = function(){
-	  if($scope.content === '') { return; }
+	  // if($scope.content === '') { return; }
 	  questions.addAnswer(question._id, {
 	    content: $scope.newAnswer.content,
 	    // author: 'user'
@@ -21,6 +21,20 @@ function($scope, $state, questions, question, auth){
 	  });
 	  // $scope.body = '';
 	};
+	
+	$scope.submitReply = function(answer){
+	  // if($scope.content === '') { return; }
+	  console.log("newReply", answer.reply);
+	  questions.addReply(question._id, answer._id, {
+	    content: answer.reply,
+	    // author: 'user'
+	  }).success(function(reply){
+	  	// $scope.question.answers.push(answer);
+	  	console.log("reply", reply);
+	  });
+	  // $scope.body = '';
+	};
+
 	// $scope.addComment = function(){
 	//   if($scope.body === '') { return; }
 	//   posts.addComment(post._id, {

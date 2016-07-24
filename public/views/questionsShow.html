@@ -27,6 +27,15 @@
     <hr/>
     <div class="answer">
       {{answer.content}}
+      <div class="reply" ng-repeat="reply in answer.replies">
+        {{reply}}
+      </div>
+      <form name="replyForm" ng-submit="submitReply(answer)" ng-show="isLoggedIn">
+        <textarea rows=1 cols=80 ng-model="answer.reply"></textarea>
+        <!-- <div text-angular ng-model="newAnswer.content"></div> -->
+        <input type="submit" class="btn btn-primary" value="Submit your reply">
+      </form>
     </div>
+    <hr/>
   </div>
 </div>
